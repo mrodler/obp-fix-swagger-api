@@ -1,0 +1,1179 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-API",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.2.1/root": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get API Info (root)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eAPI version\u003c/li\u003e  \u003cli\u003eHosted by information\u003c/li\u003e  \u003cli\u003eGit Commit\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv1_2_1-root",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/APIInfoJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.4.0/resource-docs/{API_VERSION}/obp": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Resource Docs.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet documentation about the RESTful resources on this server including example bodies for POST and PUT requests.\u003c/p\u003e\u003cp\u003eThis is the native data format used to document OBP endpoints. Each endpoint has a Resource Doc (a Scala case class) defined in the source code.\u003c/p\u003e\u003cp\u003eThis endpoint is used by OBP API Explorer to display and work with the API documentation.\u003c/p\u003e\u003cp\u003eMost (but not all) fields are also available in swagger format. (The Swagger endpoint is built from Resource Docs.)\u003c/p\u003e\u003cp\u003eAPI_VERSION is the version you want documentation about e.g. v3.0.0\u003c/p\u003e\u003cp\u003eYou may filter this endpoint with tags parameter e.g. ?tags\u003dAccount,Bank\u003c/p\u003e\u003cp\u003eYou may filter this endpoint with functions parameter e.g. ?functions\u003denableDisableConsumers,getConnectorMetrics\u003c/p\u003e\u003cp\u003eFor possible function values, see implemented_by.function in the JSON returned by this endpoint or the OBP source code or the footer of the API Explorer which produces a comma separated list of functions that reflect the server or filtering by API Explorer based on tags etc.\u003c/p\u003e\u003cul\u003e\u003cli\u003e operation_id is concatenation of \"v\", version and function and should be unique (used for DOM element IDs etc. maybe used to link to source code) \u003c/li\u003e\u003cli\u003e version references the version that the API call is defined in.\u003c/li\u003e\u003cli\u003e function is the (scala) partial function that implements this endpoint. It is unique per version of the API.\u003c/li\u003e\u003cli\u003e request_url is empty for the root call, else the path.\u003c/li\u003e\u003cli\u003e summary is a short description inline with the swagger terminology. \u003c/li\u003e\u003cli\u003e description may contain html markup (generated from markdown on the server).\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv1_4_0-getResourceDocsObp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "API_VERSION",
+            "description": "eg:v2.2.0, v3.0.0",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.4.0/resource-docs/{API_VERSION}/swagger": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Swagger documentation",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns documentation about the RESTful resources on this server in Swagger format.\u003c/p\u003e\u003cp\u003eAPI_VERSION is the version you want documentation about e.g. v3.0.0\u003c/p\u003e\u003cp\u003eYou may filter this endpoint using the \u0027tags\u0027 url parameter e.g. ?tags\u003dAccount,Bank\u003c/p\u003e\u003cp\u003e(All endpoints are given one or more tags which for used in grouping)\u003c/p\u003e\u003cp\u003eYou may filter this endpoint using the \u0027functions\u0027 url parameter e.g. ?functions\u003denableDisableConsumers,getConnectorMetrics\u003c/p\u003e\u003cp\u003e(Each endpoint is implemented in the OBP Scala code by a \u0027function\u0027)\u003c/p\u003e\u003cp\u003eSee the Resource Doc endpoint for more information.\u003c/p\u003e",
+        "operationId": "vv1_4_0-getResourceDocsSwagger",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "API_VERSION",
+            "description": "eg:v2.2.0, v3.0.0",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/search/metrics": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Search API Metrics via Elasticsearch.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eSearch the API calls made to this API instance via Elastic Search.\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eCanSearchMetrics entitlement is required to search metrics data.\u003c/p\u003e\u003cp\u003eparameters:\u003c/p\u003e\u003cp\u003eesType - elasticsearch type\u003c/p\u003e\u003cp\u003esimple query:\u003c/p\u003e\u003cp\u003eq - plain_text_query\u003c/p\u003e\u003cp\u003edf - default field to search\u003c/p\u003e\u003cp\u003esort - field to sort on\u003c/p\u003e\u003cp\u003esize - number of hits returned, default 10\u003c/p\u003e\u003cp\u003efrom - show hits starting from\u003c/p\u003e\u003cp\u003ejson query:\u003c/p\u003e\u003cp\u003esource - JSON_query_(URL-escaped)\u003c/p\u003e\u003cp\u003eexample usage:\u003c/p\u003e\u003cp\u003e/search/metrics/q\u003dfindThis\u003c/p\u003e\u003cp\u003eor:\u003c/p\u003e\u003cp\u003e/search/metrics/source\u003d{\"query\":{\"query_string\":{\"query\":\"findThis\"}}}\u003c/p\u003e\u003cp\u003eNote!!\u003c/p\u003e\u003cp\u003eThe whole JSON query string MUST be URL-encoded:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eFor { use %7B\u003c/li\u003e  \u003cli\u003eFor } use %7D\u003c/li\u003e  \u003cli\u003eFor : use %3A\u003c/li\u003e  \u003cli\u003eFor \" use %22\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eetc..\u003c/p\u003e\u003cp\u003eOnly q, source and esType are passed to Elastic\u003c/p\u003e\u003cp\u003eElastic simple query: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html\u003c/p\u003e\u003cp\u003eElastic JSON query: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html\u003c/p\u003e",
+        "operationId": "vv2_0_0-elasticSearchMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/consumers": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Consumers",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the all Consumers.\u003c/p\u003e",
+        "operationId": "vv2_1_0-getConsumers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConsumersJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/consumers/{CONSUMER_ID}": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Consumer",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the Consumer specified by CONSUMER_ID.\u003c/p\u003e",
+        "operationId": "vv2_1_0-getConsumer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConsumerJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Enable or Disable Consumers",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eEnable/Disable a Consumer specified by CONSUMER_ID.\u003c/p\u003e",
+        "operationId": "vv2_1_0-enableDisableConsumers",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutEnabledJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PutEnabledJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/consumers/{CONSUMER_ID}/consumer/redirect_url": {
+      "put": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Update Consumer RedirectUrl",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate an existing redirectUrl for a Consumer specified by CONSUMER_ID.\u003c/p\u003e\u003cp\u003eCONSUMER_ID can be obtained after you register the application. \u003c/p\u003e\u003cp\u003eOr use the endpoint \u0027Get Consumers\u0027 to get it \u003c/p\u003e",
+        "operationId": "vv2_1_0-updateConsumerRedirectUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConsumerRedirectUrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConsumerJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/metrics": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Metrics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the all metrics\u003c/p\u003e\u003cp\u003erequire CanReadMetrics role\u003c/p\u003e\u003cp\u003eFilters Part 1.*filtering* (no wilde cards etc.) parameters to GET /management/metrics\u003c/p\u003e\u003cp\u003eShould be able to filter on the following metrics fields\u003c/p\u003e\u003cp\u003eeg: /management/metrics?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;limit\u003d50\u0026amp;offset\u003d2\u003c/p\u003e\u003cp\u003e1 from_date (defaults to one week before current date): eg:from_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e2 to_date (defaults to current date) eg:to_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e3 limit (for pagination: defaults to 50) eg:limit\u003d200\u003c/p\u003e\u003cp\u003e4 offset (for pagination: zero index, defaults to 0) eg: offset\u003d10\u003c/p\u003e\u003cp\u003e5 sort_by (defaults to date field) eg: sort_by\u003ddate  possible values:  \"url\",  \"date\",  \"user_name\",  \"app_name\",  \"developer_email\",  \"implemented_by_partial_function\",  \"implemented_in_version\",  \"consumer_id\",  \"verb\"\u003c/p\u003e\u003cp\u003e6 direction (defaults to date desc) eg: direction\u003ddesc\u003c/p\u003e\u003cp\u003eeg: /management/metrics?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;limit\u003d10000\u0026amp;offset\u003d0\u0026amp;anon\u003dfalse\u0026amp;app_name\u003dTeatApp\u0026amp;implemented_in_version\u003dv2.1.0\u0026amp;verb\u003dPOST\u0026amp;user_id\u003dc7b6cb47-cb96-4441-8801-35b57456753a\u0026amp;user_name\u003dsusan.uk.29@example.com\u0026amp;consumer_id\u003d78\u003c/p\u003e\u003cp\u003eOther filters:\u003c/p\u003e\u003cp\u003e7 consumer_id (if null ignore)\u003c/p\u003e\u003cp\u003e8 user_id (if null ignore)\u003c/p\u003e\u003cp\u003e9 anon (if null ignore) only support two value : true (return where user_id is null.) or false (return where user_id is not null.)\u003c/p\u003e\u003cp\u003e10 url (if null ignore), note: can not contain \u0027\u0026amp;\u0027.\u003c/p\u003e\u003cp\u003e11 app_name (if null ignore)\u003c/p\u003e\u003cp\u003e12 implemented_by_partial_function (if null ignore),\u003c/p\u003e\u003cp\u003e13 implemented_in_version (if null ignore)\u003c/p\u003e\u003cp\u003e14 verb (if null ignore)\u003c/p\u003e\u003cp\u003e15 correlation_id (if null ignore)\u003c/p\u003e\u003cp\u003e16 duration (if null ignore) non digit chars will be silently omitted\u003c/p\u003e",
+        "operationId": "vv2_1_0-getMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MetricsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/sandbox/data-import": {
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Create sandbox",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eImport bulk data into the sandbox (Authenticated access).\u003c/p\u003e\u003cp\u003eThis call can be used to create banks, users, accounts and transactions which are stored in the local RDBMS.\u003c/p\u003e\u003cp\u003eThe user needs to have CanCreateSandbox entitlement.\u003c/p\u003e\u003cp\u003eNote: This is a monolithic call. You could also use a combination of endpoints including create bank, create user, create account and create transaction request to create similar data.\u003c/p\u003e\u003cp\u003eAn example of an import set of data (json) can be found \u003ca href\u003d\"https://raw.githubusercontent.com/OpenBankProject/OBP-API/develop/src/main/scala/code/api/sandbox/example_data/2016-04-28/example_import.json\"\u003ehere\u003c/a\u003e Authentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-sandboxDataImport",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SandboxDataImport"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/config": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get API Configuration",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eAPI Config\u003c/li\u003e  \u003cli\u003eAkka ports\u003c/li\u003e  \u003cli\u003eElastic search ports\u003c/li\u003e  \u003cli\u003eCached function\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv2_2_0-config",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConfigurationJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/management/connector/metrics": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Connector Metrics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the all metrics\u003c/p\u003e\u003cp\u003erequire CanGetConnectorMetrics role\u003c/p\u003e\u003cp\u003eFilters Part 1.*filtering* (no wilde cards etc.) parameters to GET /management/connector/metrics\u003c/p\u003e\u003cp\u003eShould be able to filter on the following metrics fields\u003c/p\u003e\u003cp\u003eeg: /management/connector/metrics?from_date\u003d2017-09-19\u0026amp;to_date\u003d2017-09-19\u0026amp;limit\u003d50\u0026amp;offset\u003d2\u003c/p\u003e\u003cp\u003e1 from_date (defaults to one week before current date): eg:from_date\u003d2017-09-19\u003c/p\u003e\u003cp\u003e2 to_date (defaults to current date) eg:to_date\u003d2017-09-19\u003c/p\u003e\u003cp\u003e3 limit (for pagination: defaults to 1000) eg:limit\u003d2000\u003c/p\u003e\u003cp\u003e4 offset (for pagination: zero index, defaults to 0) eg: offset\u003d10\u003c/p\u003e\u003cp\u003eeg: /management/connector/metrics?from_date\u003d2017-09-19\u0026amp;to_date\u003d2017-09-19\u0026amp;limit\u003d100\u0026amp;offset\u003d300\u003c/p\u003e\u003cp\u003eOther filters:\u003c/p\u003e\u003cp\u003e5 connector_name (if null ignore)\u003c/p\u003e\u003cp\u003e6 function_name (if null ignore)\u003c/p\u003e\u003cp\u003e7 correlation_id (if null ignore)\u003c/p\u003e",
+        "operationId": "vv2_2_0-getConnectorMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConnectorMetricsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidDateFormat"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/message-docs/CONNECTOR": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Message Docs",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eThese message docs provide example messages sent by OBP to the (Kafka) message queue for processing by the Core Banking / Payment system Adapter - together with an example expected response and possible error codes.  Integrators can use these messages to build Adapters that provide core banking services to OBP.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eCONNECTOR\u003c/code\u003e: kafka_vJuneYellow2017, kafka_vJune2017 , kafka_vMar2017 or ... \u003c/p\u003e",
+        "operationId": "vv2_2_0-getMessageDocs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MessageDocsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/adapter": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get Adapter Info",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet basic information about the Adapter listening on behalf of this bank.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAdapter",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AdapterInfoJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "APIInfoJSON": {
+      "required": [
+        "version",
+        "version_status",
+        "git_commit",
+        "connector",
+        "hosted_by",
+        "akka"
+      ],
+      "properties": {
+        "akka": {
+          "$ref": "#/definitions/Akka"
+        },
+        "version_status": {
+          "type": "string",
+          "example": "String"
+        },
+        "version": {
+          "type": "string",
+          "example": "String"
+        },
+        "connector": {
+          "type": "string",
+          "example": "String"
+        },
+        "hosted_by": {
+          "$ref": "#/definitions/HostedBy"
+        },
+        "git_commit": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "Akka": {
+      "properties": {
+        "remote_data_secret_matched": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "HostedBy": {
+      "required": [
+        "organisation",
+        "email",
+        "phone",
+        "organisation_website"
+      ],
+      "properties": {
+        "organisation_website": {
+          "type": "string",
+          "example": "String"
+        },
+        "phone": {
+          "type": "string",
+          "example": "String"
+        },
+        "email": {
+          "type": "string",
+          "example": "String"
+        },
+        "organisation": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ErrorUnknownError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-50000: Unknown Error."
+        }
+      }
+    },
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "ConsumersJson": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConsumerJSON"
+          }
+        }
+      }
+    },
+    "ConsumerJSON": {
+      "required": [
+        "consumer_id",
+        "app_name",
+        "app_type",
+        "description",
+        "developer_email",
+        "redirect_url",
+        "created_by_user_id",
+        "created_by_user",
+        "enabled",
+        "created"
+      ],
+      "properties": {
+        "created_by_user_id": {
+          "type": "string",
+          "example": "123213"
+        },
+        "app_type": {
+          "type": "string",
+          "example": "Web"
+        },
+        "description": {
+          "type": "string",
+          "example": "Account Management"
+        },
+        "created_by_user": {
+          "$ref": "#/definitions/ResourceUserJSON"
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "redirect_url": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "developer_email": {
+          "type": "string",
+          "example": "contact@tesobe.com"
+        },
+        "consumer_id": {
+          "type": "integer",
+          "format": "int64",
+          "example": "1213"
+        },
+        "app_name": {
+          "type": "string",
+          "example": "SOFI"
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "ResourceUserJSON": {
+      "required": [
+        "user_id",
+        "email",
+        "provider_id",
+        "provider",
+        "username"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "obp"
+        },
+        "email": {
+          "type": "string",
+          "example": "contact@tesobe.com"
+        },
+        "username": {
+          "type": "string",
+          "example": "TESOBE"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "obp"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "PutEnabledJSON": {
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "example": "false"
+        }
+      }
+    },
+    "ConsumerRedirectUrlJSON": {
+      "required": [
+        "redirect_url"
+      ],
+      "properties": {
+        "redirect_url": {
+          "type": "string",
+          "example": "http://localhost:8888"
+        }
+      }
+    },
+    "MetricsJson": {
+      "required": [
+        "metrics"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricJson"
+          }
+        }
+      }
+    },
+    "MetricJson": {
+      "required": [
+        "user_id",
+        "url",
+        "date",
+        "user_name",
+        "app_name",
+        "developer_email",
+        "implemented_by_partial_function",
+        "implemented_in_version",
+        "consumer_id",
+        "verb",
+        "correlation_id",
+        "duration"
+      ],
+      "properties": {
+        "duration": {
+          "type": "integer",
+          "format": "int64",
+          "example": "39"
+        },
+        "implemented_in_version": {
+          "type": "string",
+          "example": "v210"
+        },
+        "url": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "correlation_id": {
+          "type": "string",
+          "example": "v8ho6h5ivel3uq7a5zcnv0w1"
+        },
+        "implemented_by_partial_function": {
+          "type": "string",
+          "example": "getBanks"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "134"
+        },
+        "developer_email": {
+          "type": "string",
+          "example": "contact@tesobe.ocm"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "consumer_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "verb": {
+          "type": "string",
+          "example": "get"
+        },
+        "app_name": {
+          "type": "string",
+          "example": "SOFI"
+        },
+        "user_name": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "SandboxDataImport": {
+      "required": [
+        "banks",
+        "users",
+        "accounts",
+        "transactions",
+        "branches",
+        "atms",
+        "products",
+        "crm_events"
+      ],
+      "properties": {
+        "crm_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxCrmEventImport"
+          }
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxUserImport"
+          }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxProductImport"
+          }
+        },
+        "banks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxBankImport"
+          }
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxBranchImport"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxTransactionImport"
+          }
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxAccountImport"
+          }
+        },
+        "atms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxAtmImport"
+          }
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "ConfigurationJSON": {
+      "required": [
+        "akka",
+        "elastic_search",
+        "cache"
+      ],
+      "properties": {
+        "cache": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CachedFunctionJSON"
+          }
+        },
+        "elastic_search": {
+          "$ref": "#/definitions/ElasticSearchJSON"
+        },
+        "akka": {
+          "$ref": "#/definitions/AkkaJSON"
+        }
+      }
+    },
+    "CachedFunctionJSON": {
+      "required": [
+        "function_name",
+        "ttl_in_seconds"
+      ],
+      "properties": {
+        "ttl_in_seconds": {
+          "type": "integer",
+          "format": "int32",
+          "example": "5"
+        },
+        "function_name": {
+          "type": "string",
+          "example": "getBanks"
+        }
+      }
+    },
+    "ElasticSearchJSON": {
+      "required": [
+        "metrics",
+        "warehouse"
+      ],
+      "properties": {
+        "warehouse": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WarehouseJSON"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricsJSON"
+          }
+        }
+      }
+    },
+    "WarehouseJSON": {
+      "required": [
+        "property",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "ElasticSearch"
+        },
+        "property": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "MetricsJSON": {
+      "required": [
+        "property",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "Mapper"
+        },
+        "property": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "AkkaJSON": {
+      "required": [
+        "ports",
+        "log_level"
+      ],
+      "properties": {
+        "log_level": {
+          "type": "string",
+          "example": "Debug"
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PortJSON"
+          }
+        }
+      }
+    },
+    "PortJSON": {
+      "required": [
+        "property",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "8080"
+        },
+        "property": {
+          "type": "string",
+          "example": "default"
+        }
+      }
+    },
+    "ConnectorMetricsJson": {
+      "required": [
+        "metrics"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConnectorMetricJson"
+          }
+        }
+      }
+    },
+    "ConnectorMetricJson": {
+      "required": [
+        "connector_name",
+        "function_name",
+        "correlation_id",
+        "date",
+        "duration"
+      ],
+      "properties": {
+        "connector_name": {
+          "type": "string",
+          "example": "mapper"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int64",
+          "example": "1000"
+        },
+        "function_name": {
+          "type": "string",
+          "example": "getBanks"
+        },
+        "correlation_id": {
+          "type": "string",
+          "example": "12345"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "ErrorInvalidDateFormat": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10005: Invalid Date Format. Could not convert value to a Date."
+        }
+      }
+    },
+    "MessageDocsJson": {
+      "required": [
+        "messageDocs"
+      ],
+      "properties": {
+        "messageDocs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageDocJson"
+          }
+        }
+      }
+    },
+    "MessageDocJson": {
+      "required": [
+        "process",
+        "message_format",
+        "description",
+        "example_outbound_message",
+        "example_inbound_message"
+      ],
+      "properties": {
+        "outboundAvroSchema": {
+          "type": "string",
+          "example": "This is a json String."
+        },
+        "example_inbound_message": {
+          "type": "string",
+          "example": "This is a json String."
+        },
+        "inboundAvroSchema": {
+          "type": "string",
+          "example": "This is a json String."
+        },
+        "description": {
+          "type": "string",
+          "example": "get Banks"
+        },
+        "process": {
+          "type": "string",
+          "example": "getBanks"
+        },
+        "message_format": {
+          "type": "string",
+          "example": "KafkaV2017"
+        },
+        "example_outbound_message": {
+          "type": "string",
+          "example": "This is a json String."
+        }
+      }
+    },
+    "AdapterInfoJsonV300": {
+      "required": [
+        "name",
+        "version",
+        "git_commit",
+        "date"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "example": "2013-01-21T23:08:00Z"
+        },
+        "git_commit": {
+          "type": "string",
+          "example": "String"
+        },
+        "version": {
+          "type": "string",
+          "example": "String"
+        },
+        "name": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,455 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-API-Metric",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-api-metric",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/search/metrics": {
+      "get": {
+        "tags": [
+          "API-Metric"
+        ],
+        "summary": "Search API Metrics via Elasticsearch.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eSearch the API calls made to this API instance via Elastic Search.\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eCanSearchMetrics entitlement is required to search metrics data.\u003c/p\u003e\u003cp\u003eparameters:\u003c/p\u003e\u003cp\u003eesType - elasticsearch type\u003c/p\u003e\u003cp\u003esimple query:\u003c/p\u003e\u003cp\u003eq - plain_text_query\u003c/p\u003e\u003cp\u003edf - default field to search\u003c/p\u003e\u003cp\u003esort - field to sort on\u003c/p\u003e\u003cp\u003esize - number of hits returned, default 10\u003c/p\u003e\u003cp\u003efrom - show hits starting from\u003c/p\u003e\u003cp\u003ejson query:\u003c/p\u003e\u003cp\u003esource - JSON_query_(URL-escaped)\u003c/p\u003e\u003cp\u003eexample usage:\u003c/p\u003e\u003cp\u003e/search/metrics/q\u003dfindThis\u003c/p\u003e\u003cp\u003eor:\u003c/p\u003e\u003cp\u003e/search/metrics/source\u003d{\"query\":{\"query_string\":{\"query\":\"findThis\"}}}\u003c/p\u003e\u003cp\u003eNote!!\u003c/p\u003e\u003cp\u003eThe whole JSON query string MUST be URL-encoded:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eFor { use %7B\u003c/li\u003e  \u003cli\u003eFor } use %7D\u003c/li\u003e  \u003cli\u003eFor : use %3A\u003c/li\u003e  \u003cli\u003eFor \" use %22\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eetc..\u003c/p\u003e\u003cp\u003eOnly q, source and esType are passed to Elastic\u003c/p\u003e\u003cp\u003eElastic simple query: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html\u003c/p\u003e\u003cp\u003eElastic JSON query: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html\u003c/p\u003e",
+        "operationId": "vv2_0_0-elasticSearchMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/metrics": {
+      "get": {
+        "tags": [
+          "API-Metric"
+        ],
+        "summary": "Get Metrics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the all metrics\u003c/p\u003e\u003cp\u003erequire CanReadMetrics role\u003c/p\u003e\u003cp\u003eFilters Part 1.*filtering* (no wilde cards etc.) parameters to GET /management/metrics\u003c/p\u003e\u003cp\u003eShould be able to filter on the following metrics fields\u003c/p\u003e\u003cp\u003eeg: /management/metrics?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;limit\u003d50\u0026amp;offset\u003d2\u003c/p\u003e\u003cp\u003e1 from_date (defaults to one week before current date): eg:from_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e2 to_date (defaults to current date) eg:to_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e3 limit (for pagination: defaults to 50) eg:limit\u003d200\u003c/p\u003e\u003cp\u003e4 offset (for pagination: zero index, defaults to 0) eg: offset\u003d10\u003c/p\u003e\u003cp\u003e5 sort_by (defaults to date field) eg: sort_by\u003ddate  possible values:  \"url\",  \"date\",  \"user_name\",  \"app_name\",  \"developer_email\",  \"implemented_by_partial_function\",  \"implemented_in_version\",  \"consumer_id\",  \"verb\"\u003c/p\u003e\u003cp\u003e6 direction (defaults to date desc) eg: direction\u003ddesc\u003c/p\u003e\u003cp\u003eeg: /management/metrics?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;limit\u003d10000\u0026amp;offset\u003d0\u0026amp;anon\u003dfalse\u0026amp;app_name\u003dTeatApp\u0026amp;implemented_in_version\u003dv2.1.0\u0026amp;verb\u003dPOST\u0026amp;user_id\u003dc7b6cb47-cb96-4441-8801-35b57456753a\u0026amp;user_name\u003dsusan.uk.29@example.com\u0026amp;consumer_id\u003d78\u003c/p\u003e\u003cp\u003eOther filters:\u003c/p\u003e\u003cp\u003e7 consumer_id (if null ignore)\u003c/p\u003e\u003cp\u003e8 user_id (if null ignore)\u003c/p\u003e\u003cp\u003e9 anon (if null ignore) only support two value : true (return where user_id is null.) or false (return where user_id is not null.)\u003c/p\u003e\u003cp\u003e10 url (if null ignore), note: can not contain \u0027\u0026amp;\u0027.\u003c/p\u003e\u003cp\u003e11 app_name (if null ignore)\u003c/p\u003e\u003cp\u003e12 implemented_by_partial_function (if null ignore),\u003c/p\u003e\u003cp\u003e13 implemented_in_version (if null ignore)\u003c/p\u003e\u003cp\u003e14 verb (if null ignore)\u003c/p\u003e\u003cp\u003e15 correlation_id (if null ignore)\u003c/p\u003e\u003cp\u003e16 duration (if null ignore) non digit chars will be silently omitted\u003c/p\u003e",
+        "operationId": "vv2_1_0-getMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MetricsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/management/connector/metrics": {
+      "get": {
+        "tags": [
+          "API-Metric"
+        ],
+        "summary": "Get Connector Metrics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the all metrics\u003c/p\u003e\u003cp\u003erequire CanGetConnectorMetrics role\u003c/p\u003e\u003cp\u003eFilters Part 1.*filtering* (no wilde cards etc.) parameters to GET /management/connector/metrics\u003c/p\u003e\u003cp\u003eShould be able to filter on the following metrics fields\u003c/p\u003e\u003cp\u003eeg: /management/connector/metrics?from_date\u003d2017-09-19\u0026amp;to_date\u003d2017-09-19\u0026amp;limit\u003d50\u0026amp;offset\u003d2\u003c/p\u003e\u003cp\u003e1 from_date (defaults to one week before current date): eg:from_date\u003d2017-09-19\u003c/p\u003e\u003cp\u003e2 to_date (defaults to current date) eg:to_date\u003d2017-09-19\u003c/p\u003e\u003cp\u003e3 limit (for pagination: defaults to 1000) eg:limit\u003d2000\u003c/p\u003e\u003cp\u003e4 offset (for pagination: zero index, defaults to 0) eg: offset\u003d10\u003c/p\u003e\u003cp\u003eeg: /management/connector/metrics?from_date\u003d2017-09-19\u0026amp;to_date\u003d2017-09-19\u0026amp;limit\u003d100\u0026amp;offset\u003d300\u003c/p\u003e\u003cp\u003eOther filters:\u003c/p\u003e\u003cp\u003e5 connector_name (if null ignore)\u003c/p\u003e\u003cp\u003e6 function_name (if null ignore)\u003c/p\u003e\u003cp\u003e7 correlation_id (if null ignore)\u003c/p\u003e",
+        "operationId": "vv2_2_0-getConnectorMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConnectorMetricsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidDateFormat"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/management/aggregate-metrics": {
+      "get": {
+        "tags": [
+          "API-Metric"
+        ],
+        "summary": "Get Aggregate Metrics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns aggregate metrics on api usage eg. total count, response time (in ms), etc.\u003c/p\u003e\u003cp\u003eShould be able to filter on the following fields\u003c/p\u003e\u003cp\u003eeg: /management/aggregate-metrics?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;consumer_id\u003d5 \u0026amp;user_id\u003d66214b8e-259e-44ad-8868-3eb47be70646\u0026amp;implemented_by_partial_function\u003dgetTransactionsForBankAccount \u0026amp;implemented_in_version\u003dv3.0.0\u0026amp;url\u003d/obp/v3.0.0/banks/gh.29.uk/accounts/8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0/owner/transactions \u0026amp;verb\u003dGET\u0026amp;anon\u003dfalse\u0026amp;app_name\u003dMapperPostman \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e1 from_date (defaults to the day before the current date): eg:from_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e2 to_date (defaults to the current date) eg:to_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e3 consumer_id (if null ignore)\u003c/p\u003e\u003cp\u003e4 user_id (if null ignore)\u003c/p\u003e\u003cp\u003e5 anon (if null ignore) only support two value : true (return where user_id is null.) or false (return where user_id is not null.)\u003c/p\u003e\u003cp\u003e6 url (if null ignore), note: can not contain \u0027\u0026amp;\u0027.\u003c/p\u003e\u003cp\u003e7 app_name (if null ignore)\u003c/p\u003e\u003cp\u003e8 implemented_by_partial_function (if null ignore),\u003c/p\u003e\u003cp\u003e9 implemented_in_version (if null ignore)\u003c/p\u003e\u003cp\u003e10 verb (if null ignore)\u003c/p\u003e\u003cp\u003e11 correlation_id (if null ignore)\u003c/p\u003e\u003cp\u003e12 duration (if null ignore) non digit chars will be silently omitted\u003c/p\u003e\u003cp\u003e13 exclude_app_names (if null ignore).eg: \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e14 exclude_url_pattern (if null ignore).you can design you own SQL NOT LIKE pattern. eg: \u0026amp;exclude_url_pattern\u003d%management/metrics%\u003c/p\u003e\u003cp\u003e15 exclude_implemented_by_partial_functions (if null ignore).eg: \u0026amp;exclude_implemented_by_partial_functions\u003dgetMetrics,getConnectorMetrics,getAggregateMetrics\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAggregateMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AggregateMetricJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/management/metrics/top-apis": {
+      "get": {
+        "tags": [
+          "API-Metric"
+        ],
+        "summary": "get top apis",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns get top apis. eg. total count, response time (in ms), etc.\u003c/p\u003e\u003cp\u003eShould be able to filter on the following fields\u003c/p\u003e\u003cp\u003eeg: /management/metrics/top-apis?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;consumer_id\u003d5 \u0026amp;user_id\u003d66214b8e-259e-44ad-8868-3eb47be70646\u0026amp;implemented_by_partial_function\u003dgetTransactionsForBankAccount \u0026amp;implemented_in_version\u003dv3.0.0\u0026amp;url\u003d/obp/v3.0.0/banks/gh.29.uk/accounts/8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0/owner/transactions \u0026amp;verb\u003dGET\u0026amp;anon\u003dfalse\u0026amp;app_name\u003dMapperPostman \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e1 from_date (defaults to the day before the current date): eg:from_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e2 to_date (defaults to the current date) eg:to_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e3 consumer_id (if null ignore)\u003c/p\u003e\u003cp\u003e4 user_id (if null ignore)\u003c/p\u003e\u003cp\u003e5 anon (if null ignore) only support two value : true (return where user_id is null.) or false (return where user_id is not null.)\u003c/p\u003e\u003cp\u003e6 url (if null ignore), note: can not contain \u0027\u0026amp;\u0027.\u003c/p\u003e\u003cp\u003e7 app_name (if null ignore)\u003c/p\u003e\u003cp\u003e8 implemented_by_partial_function (if null ignore),\u003c/p\u003e\u003cp\u003e9 implemented_in_version (if null ignore)\u003c/p\u003e\u003cp\u003e10 verb (if null ignore)\u003c/p\u003e\u003cp\u003e11 correlation_id (if null ignore)\u003c/p\u003e\u003cp\u003e12 duration (if null ignore) non digit chars will be silently omitted\u003c/p\u003e\u003cp\u003e13 exclude_app_names (if null ignore).eg: \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e14 exclude_url_pattern (if null ignore).you can design you own SQL NOT LIKE pattern. eg: \u0026amp;exclude_url_pattern\u003d%management/metrics%\u003c/p\u003e\u003cp\u003e15 exclude_implemented_by_partial_functions (if null ignore).eg: \u0026amp;exclude_implemented_by_partial_functions\u003dgetMetrics,getConnectorMetrics,getAggregateMetrics\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_1_0-getTopAPIs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/$colon$colon"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/management/metrics/top-consumers": {
+      "get": {
+        "tags": [
+          "API-Metric"
+        ],
+        "summary": "get metrics top consumers",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eget metrics top consumers on api usage eg. total count, consumer_id and app_name.\u003c/p\u003e\u003cp\u003eShould be able to filter on the following fields\u003c/p\u003e\u003cp\u003eeg: /management/metrics/top-consumers?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-05-22T01:02:03.000Z\u0026amp;consumer_id\u003d5 \u0026amp;user_id\u003d66214b8e-259e-44ad-8868-3eb47be70646\u0026amp;implemented_by_partial_function\u003dgetTransactionsForBankAccount \u0026amp;implemented_in_version\u003dv3.0.0\u0026amp;url\u003d/obp/v3.0.0/banks/gh.29.uk/accounts/8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0/owner/transactions \u0026amp;verb\u003dGET\u0026amp;anon\u003dfalse\u0026amp;app_name\u003dMapperPostman \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null \u0026amp;limit\u003d100\u003c/p\u003e\u003cp\u003e1 from_date (defaults to the day before the current date): eg:from_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e2 to_date (defaults to the current date) eg:to_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e3 consumer_id (if null ignore)\u003c/p\u003e\u003cp\u003e4 user_id (if null ignore)\u003c/p\u003e\u003cp\u003e5 anon (if null ignore) only support two value : true (return where user_id is null.) or false (return where user_id is not null.)\u003c/p\u003e\u003cp\u003e6 url (if null ignore), note: can not contain \u0027\u0026amp;\u0027.\u003c/p\u003e\u003cp\u003e7 app_name (if null ignore)\u003c/p\u003e\u003cp\u003e8 implemented_by_partial_function (if null ignore),\u003c/p\u003e\u003cp\u003e9 implemented_in_version (if null ignore)\u003c/p\u003e\u003cp\u003e10 verb (if null ignore)\u003c/p\u003e\u003cp\u003e11 correlation_id (if null ignore)\u003c/p\u003e\u003cp\u003e12 duration (if null ignore) non digit chars will be silently omitted\u003c/p\u003e\u003cp\u003e13 exclude_app_names (if null ignore).eg: \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e14 exclude_url_pattern (if null ignore).you can design you own SQL NOT LIKE pattern. eg: \u0026amp;exclude_url_pattern\u003d%management/metrics%\u003c/p\u003e\u003cp\u003e15 exclude_implemented_by_partial_functions (if null ignore).eg: \u0026amp;exclude_implemented_by_partial_functions\u003dgetMetrics,getConnectorMetrics,getAggregateMetrics\u003c/p\u003e\u003cp\u003e16 limit (for pagination: defaults to 50) eg:limit\u003d200\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_1_0-getMetricsTopConsumers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/$colon$colon"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "MetricsJson": {
+      "required": [
+        "metrics"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricJson"
+          }
+        }
+      }
+    },
+    "MetricJson": {
+      "required": [
+        "user_id",
+        "url",
+        "date",
+        "user_name",
+        "app_name",
+        "developer_email",
+        "implemented_by_partial_function",
+        "implemented_in_version",
+        "consumer_id",
+        "verb",
+        "correlation_id",
+        "duration"
+      ],
+      "properties": {
+        "duration": {
+          "type": "integer",
+          "format": "int64",
+          "example": "39"
+        },
+        "implemented_in_version": {
+          "type": "string",
+          "example": "v210"
+        },
+        "url": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "correlation_id": {
+          "type": "string",
+          "example": "v8ho6h5ivel3uq7a5zcnv0w1"
+        },
+        "implemented_by_partial_function": {
+          "type": "string",
+          "example": "getBanks"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "134"
+        },
+        "developer_email": {
+          "type": "string",
+          "example": "contact@tesobe.ocm"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "consumer_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "verb": {
+          "type": "string",
+          "example": "get"
+        },
+        "app_name": {
+          "type": "string",
+          "example": "SOFI"
+        },
+        "user_name": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "ConnectorMetricsJson": {
+      "required": [
+        "metrics"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConnectorMetricJson"
+          }
+        }
+      }
+    },
+    "ConnectorMetricJson": {
+      "required": [
+        "connector_name",
+        "function_name",
+        "correlation_id",
+        "date",
+        "duration"
+      ],
+      "properties": {
+        "connector_name": {
+          "type": "string",
+          "example": "mapper"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int64",
+          "example": "1000"
+        },
+        "function_name": {
+          "type": "string",
+          "example": "getBanks"
+        },
+        "correlation_id": {
+          "type": "string",
+          "example": "12345"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "ErrorInvalidDateFormat": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10005: Invalid Date Format. Could not convert value to a Date."
+        }
+      }
+    },
+    "AggregateMetricJSON": {
+      "required": [
+        "count",
+        "average_response_time",
+        "minimum_response_time",
+        "maximum_response_time"
+      ],
+      "properties": {
+        "maximum_response_time": {
+          "type": "number",
+          "format": "double",
+          "example": "9039.0"
+        },
+        "minimum_response_time": {
+          "type": "number",
+          "format": "double",
+          "example": "1.0"
+        },
+        "average_response_time": {
+          "type": "number",
+          "format": "double",
+          "example": "65.21"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32",
+          "example": "7076"
+        }
+      }
+    },
+    "$colon$colon": {
+      "required": [
+        "serialVersionUID",
+        "head",
+        "tl"
+      ],
+      "properties": {
+        "tl": {
+          "$ref": "#/definitions/Nil$"
+        },
+        "head": {
+          "$ref": "#/definitions/TopConsumerJson"
+        }
+      }
+    },
+    "TopConsumerJson": {
+      "required": [
+        "count",
+        "consumer_id",
+        "app_name",
+        "developer_email"
+      ],
+      "properties": {
+        "developer_email": {
+          "type": "string",
+          "example": "tesobe@tesobe.com"
+        },
+        "app_name": {
+          "type": "string",
+          "example": "Api Explorer"
+        },
+        "consumer_id": {
+          "type": "string",
+          "example": "12312312"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32",
+          "example": "7076"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2187 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Counterparty-Metadata",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-counterparty-metadata",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata": {
+      "get": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Get Other Account Metadata.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet metadata of one other account. Returns only the metadata about one other bank account (OTHER_ACCOUNT_ID) that had shared at least one transaction with ACCOUNT_ID at BANK_ID.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getOtherAccountMetadata",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OtherAccountMetadataJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata/corporate_location": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete Counterparty Corporate Location.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete corporate location of other bank account. Delete the geolocation of the counterparty\u0027s registered address\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCounterpartyCorporateLocation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add Corporate Location to Counterparty",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd the geolocation of the counterparty\u0027s registered address\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyCorporateLocation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CorporateLocationJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update Counterparty Corporate Location",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate the geolocation of the counterparty\u0027s registered address\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyCorporateLocation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CorporateLocationJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata/image_url": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete Counterparty Image URL",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete image url of other bank account.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCounterpartyImageUrl",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add image url to other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a url that points to the logo of the counterparty\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyImageUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ImageUrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update Counterparty Image Url",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate the url that points to the logo of the counterparty\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyImageUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ImageUrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata/more_info": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete more info of other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "",
+        "operationId": "vv1_2_1-deleteCounterpartyMoreInfo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add Counterparty More Info",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a description of the counter party from the perpestive of the account e.g. My dentist.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyMoreInfo",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MoreInfoJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update Counterparty More Info",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate the more info description of the counter party from the perpestive of the account e.g. My dentist.\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyMoreInfo",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MoreInfoJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata/open_corporates_url": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete Counterparty Open Corporates URL",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete open corporate url of other bank account.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCounterpartyOpenCorporatesUrl",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add Open Corporates URL to Counterparty",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd open corporates url to other bank account.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyOpenCorporatesUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OpenCorporateUrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update Open Corporates Url of Counterparty",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate open corporate url of other bank account.\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyOpenCorporatesUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OpenCorporateUrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata/physical_location": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete Counterparty Physical Location.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete physical location of other bank account.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCounterpartyPhysicalLocation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add physical location to other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd geocoordinates of the counterparty\u0027s main location\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyPhysicalLocation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PhysicalLocationJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update Counterparty Physical Location",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate geocoordinates of the counterparty\u0027s main location\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyPhysicalLocation",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PhysicalLocationJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/metadata/url": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete url of other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "",
+        "operationId": "vv1_2_1-deleteCounterpartyUrl",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add url to other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eA url which represents the counterparty (home page url etc.)\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update url of other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eA url which represents the counterparty (home page url etc.)\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/private_alias": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete Counterparty Private Alias",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the private alias of the other account OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCounterpartyPrivateAlias",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Get Other Account Private Alias",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the private alias of the other account OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getOtherAccountPrivateAlias",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AliasJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Create Other Account Private Alias",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreates a private alias for the other account OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addOtherAccountPrivateAlias",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AliasJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update Counterparty Private Alias",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdates the private alias of the counterparty (AKA other account) OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyPrivateAlias",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AliasJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/other_accounts/{OTHER_ACCOUNT_ID}/public_alias": {
+      "delete": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Delete Counterparty Public Alias",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the public alias of the other account OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCounterpartyPublicAlias",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Get public alias of other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the public alias of the other account OTHER_ACCOUNT_ID. Authentication is Optional Authentication is Mandatory if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getCounterpartyPublicAlias",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AliasJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Add public alias to other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreates the public alias for the other account OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e\u003cp\u003eNote: Public aliases are automatically generated for new \u0027other accounts / counterparties\u0027, so this call should only be used if the public alias was deleted.\u003c/p\u003e\u003cp\u003eThe VIEW_ID parameter should be a view the caller is permitted to access to and that has permission to create public aliases.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCounterpartyPublicAlias",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AliasJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Update public alias of other bank account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdates the public alias of the other account / counterparty OTHER_ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateCounterpartyPublicAlias",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AliasJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "OTHER_ACCOUNT_ID",
+            "description": "The other account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/counterparties/COUNTERPARTY_ID": {
+      "get": {
+        "tags": [
+          "Counterparty-Metadata"
+        ],
+        "summary": "Get Counterparty by Counterparty Id.(Explicit).",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eInformation returned about the Counterparty specified by COUNTERPARTY_ID:\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_2_0-getExplictCounterpartyById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CounterpartyWithMetadataJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "OtherAccountMetadataJSON": {
+      "required": [
+        "public_alias",
+        "private_alias",
+        "more_info",
+        "URL",
+        "image_URL",
+        "open_corporates_URL",
+        "corporate_location",
+        "physical_location"
+      ],
+      "properties": {
+        "public_alias": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "image_URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "physical_location": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "private_alias": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "more_info": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "corporate_location": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "open_corporates_URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        }
+      }
+    },
+    "LocationJSONV121": {
+      "required": [
+        "latitude",
+        "longitude",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.231"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.231"
+        }
+      }
+    },
+    "UserJSONV121": {
+      "required": [
+        "id",
+        "provider",
+        "display_name"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "CorporateLocationJSON": {
+      "required": [
+        "corporate_location"
+      ],
+      "properties": {
+        "corporate_location": {
+          "$ref": "#/definitions/LocationPlainJSON"
+        }
+      }
+    },
+    "LocationPlainJSON": {
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.535"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.532"
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "ErrorUnknownError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-50000: Unknown Error."
+        }
+      }
+    },
+    "ImageUrlJSON": {
+      "required": [
+        "image_URL"
+      ],
+      "properties": {
+        "image_URL": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ErrorBankAccountNotFound": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-30018: Bank Account not found. Please specify valid values for BANK_ID and ACCOUNT_ID. "
+        }
+      }
+    },
+    "MoreInfoJSON": {
+      "required": [
+        "more_info"
+      ],
+      "properties": {
+        "more_info": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "OpenCorporateUrlJSON": {
+      "required": [
+        "open_corporates_URL"
+      ],
+      "properties": {
+        "open_corporates_URL": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "PhysicalLocationJSON": {
+      "required": [
+        "physical_location"
+      ],
+      "properties": {
+        "physical_location": {
+          "$ref": "#/definitions/LocationPlainJSON"
+        }
+      }
+    },
+    "UrlJSON": {
+      "required": [
+        "URL"
+      ],
+      "properties": {
+        "URL": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "AliasJSON": {
+      "required": [
+        "alias"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "CounterpartyWithMetadataJson": {
+      "required": [
+        "name",
+        "description",
+        "created_by_user_id",
+        "this_bank_id",
+        "this_account_id",
+        "this_view_id",
+        "counterparty_id",
+        "other_bank_routing_scheme",
+        "other_bank_routing_address",
+        "other_branch_routing_scheme",
+        "other_branch_routing_address",
+        "other_account_routing_scheme",
+        "other_account_routing_address",
+        "other_account_secondary_routing_scheme",
+        "other_account_secondary_routing_address",
+        "is_beneficiary",
+        "bespoke",
+        "metadata"
+      ],
+      "properties": {
+        "other_account_routing_address": {
+          "type": "string",
+          "example": "7987987-2348987-234234"
+        },
+        "other_account_routing_scheme": {
+          "type": "string",
+          "example": "accountNumber"
+        },
+        "created_by_user_id": {
+          "type": "string",
+          "example": "49e1e147-64c1-4823-ad9f-89efcd02a9fa"
+        },
+        "name": {
+          "type": "string",
+          "example": "CounterpartyName"
+        },
+        "other_account_secondary_routing_address": {
+          "type": "string",
+          "example": "8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0"
+        },
+        "is_beneficiary": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "description": {
+          "type": "string",
+          "example": "My landlord"
+        },
+        "other_branch_routing_address": {
+          "type": "string",
+          "example": "10010"
+        },
+        "bespoke": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostCounterpartyBespokeJson"
+          }
+        },
+        "other_bank_routing_scheme": {
+          "type": "string",
+          "example": "bankCode"
+        },
+        "other_branch_routing_scheme": {
+          "type": "string",
+          "example": "branchNumber"
+        },
+        "this_account_id": {
+          "type": "string",
+          "example": "8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0"
+        },
+        "this_view_id": {
+          "type": "string",
+          "example": "owner"
+        },
+        "metadata": {
+          "$ref": "#/definitions/CounterpartyMetadataJson"
+        },
+        "other_bank_routing_address": {
+          "type": "string",
+          "example": "10"
+        },
+        "this_bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "counterparty_id": {
+          "type": "string",
+          "example": "1d65db7c-a7b2-4839-af41-958276ab7790"
+        },
+        "other_account_secondary_routing_scheme": {
+          "type": "string",
+          "example": "accountId"
+        }
+      }
+    },
+    "PostCounterpartyBespokeJson": {
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "english Name"
+        },
+        "key": {
+          "type": "string",
+          "example": "englishName"
+        }
+      }
+    },
+    "CounterpartyMetadataJson": {
+      "required": [
+        "publicAlias",
+        "moreInfo",
+        "url",
+        "imageURL",
+        "openCorporatesURL",
+        "corporateLocation",
+        "physicalLocation",
+        "privateAlias"
+      ],
+      "properties": {
+        "publicAlias": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    }
+  }
+}

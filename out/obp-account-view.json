@@ -1,0 +1,1643 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Account-View",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-account-view",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions/PROVIDER/{PROVIDER_ID}/views": {
+      "post": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Grant User access to a list of views.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGrants the user identified by PROVIDER_ID at their provider PROVIDER access to a list of views at BANK_ID for account ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAll url parameters must be \u003ca href\u003d\"http://en.wikipedia.org/wiki/Percent-encoding\"\u003e%-encoded\u003c/a\u003e, which is often especially relevant for PROVIDER_ID and PROVIDER.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eThe User needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addPermissionForUserForBankAccountForMultipleViews",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ViewIdsJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "PROVIDER_ID",
+            "description": "The provider id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ViewsJSONV121"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions/PROVIDER/{PROVIDER_ID}/views/{VIEW_ID}": {
+      "post": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Grant User access to View.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGrants the User identified by PROVIDER_ID at PROVIDER access to the view VIEW_ID at BANK_ID for account ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAll url parameters must be \u003ca href\u003d\"http://en.wikipedia.org/wiki/Percent-encoding\"\u003e%-encoded\u003c/a\u003e, which is often especially relevant for PROVIDER and PROVIDER_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e\u003cp\u003eGranting access to a public view will return an error message, as the user already has access.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addPermissionForUserForBankAccountForOneView",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "PROVIDER_ID",
+            "description": "The provider id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ViewJSONV121"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions/{PROVIDER_ID}/{USER_ID}/views": {
+      "delete": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Revoke access to all Views on Account",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eRevokes the user identified by PROVIDER_ID at their provider PROVIDER access to all the views at BANK_ID for account ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv1_2_1-removePermissionForUserForBankAccountForAllViews",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "PROVIDER_ID",
+            "description": "The provider id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions/{PROVIDER_ID}/{USER_ID}/views/{VIEW_ID}": {
+      "delete": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Revoke access to one View.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eRevokes the user identified by PROVIDER_ID at their provider PROVIDER access to the view VIEW_ID at BANK_ID for account ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eRevoking a user access to a public view will return an error message.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv1_2_1-removePermissionForUserForBankAccountForOneView",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "PROVIDER_ID",
+            "description": "The provider id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/views/{VIEW_ID}": {
+      "delete": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Delete View",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the view specified by VIEW_ID on the bank account specified by ACCOUNT_ID at bank BANK_ID.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteViewForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions": {
+      "get": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Get access.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the list of the permissions at BANK_ID for account ACCOUNT_ID, with each time a pair composed of the user and the views that he has access to.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getPermissionsForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PermissionsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/accounts-held": {
+      "get": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Get Accounts Held",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Accounts held by the current User if even the User has not been assigned the owner View yet.\u003c/p\u003e\u003cp\u003eCan be used to onboard the account to the API - since all other account and transaction endpoints require views to be assigned.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAccountsHeld",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CoreAccountsHeldJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions/PROVIDER/{PROVIDER_ID}": {
+      "get": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Get Account access for User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the list of the views at BANK_ID for account ACCOUNT_ID that a user identified by PROVIDER_ID at their provider PROVIDER has access to. All url parameters must be \u003ca href\u003d\"http://en.wikipedia.org/wiki/Percent-encoding\"\u003e%-encoded\u003c/a\u003e, which is often especially relevant for USER_ID and PROVIDER.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eThe user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv3_0_0-getPermissionForUserForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "PROVIDER_ID",
+            "description": "The provider id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ViewsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/views": {
+      "get": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Get Views for Account.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003ch1\u003eViews\u003c/h1\u003e\u003cp\u003eViews in Open Bank Project provide a mechanism for fine grained access control and delegation to Accounts and Transactions. Account holders use the \u0027owner\u0027 view by default. Delegated access is made through other views for example \u0027accountants\u0027, \u0027share-holders\u0027 or \u0027tagging-application\u0027. Views can be created via the API and each view has a list of entitlements.\u003c/p\u003e\u003cp\u003eViews on accounts and transactions filter the underlying data to redact certain fields for certain users. For instance the balance on an account may be hidden from the public. The way to know what is possible on a view is determined in the following JSON.\u003c/p\u003e\u003cp\u003e\u003cstrong\u003eData:\u003c/strong\u003e When a view moderates a set of data, some fields my contain the value \u003ccode\u003enull\u003c/code\u003e rather than the original value. This indicates either that the user is not allowed to see the original data or the field is empty.\u003c/p\u003e\u003cp\u003eThere is currently one exception to this rule; the \u0027holder\u0027 field in the JSON contains always a value which is either an alias or the real name - indicated by the \u0027is_alias\u0027 field.\u003c/p\u003e\u003cp\u003e\u003cstrong\u003eAction:\u003c/strong\u003e When a user performs an action like trying to post a comment (with POST API call), if he is not allowed, the body response will contain an error message.\u003c/p\u003e\u003cp\u003e\u003cstrong\u003eMetadata:\u003c/strong\u003e Transaction metadata (like images, tags, comments, etc.) will appears \u003cem\u003eONLY\u003c/em\u003e on the view where they have been created e.g. comments posted to the public view only appear on the public view.\u003c/p\u003e\u003cp\u003eThe other account metadata fields (like image_URL, more_info, etc.) are unique through all the views. Example, if a user edits the \u0027more_info\u0027 field in the \u0027team\u0027 view, then the view \u0027authorities\u0027 will show the new value (if it is allowed to do it).\u003c/p\u003e\u003ch1\u003eAll\u003c/h1\u003e\u003cp\u003e\u003cem\u003eOptional\u003c/em\u003e\u003c/p\u003e\u003cp\u003eReturns the list of the views created for account ACCOUNT_ID at BANK_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv3_0_0-getViewsForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ViewsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Create View.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate a view on bank account\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.  The \u0027alias\u0027 field in the JSON can take one of three values:\u003c/p\u003e\u003cul\u003e  \u003cli\u003e\u003cem\u003epublic\u003c/em\u003e: to use the public alias if there is one specified for the other account.\u003c/li\u003e  \u003cli\u003e\u003cem\u003eprivate\u003c/em\u003e: to use the public alias if there is one specified for the other account.\u003c/li\u003e  \u003cli\u003e  \u003cp\u003e\u003cem\u003e\u0027\u0027(empty string)\u003c/em\u003e: to use no alias; the view shows the real name of the other account.\u003c/p\u003e\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eThe \u0027hide_metadata_if_alias_used\u0027 field in the JSON can take boolean values. If it is set to \u003ccode\u003etrue\u003c/code\u003e and there is an alias on the other account then the other accounts\u0027 metadata (like more_info, url, image_url, open_corporates_url, etc.) will be hidden. Otherwise the metadata will be shown.\u003c/p\u003e\u003cp\u003eThe \u0027allowed_actions\u0027 field is a list containing the name of the actions allowed on this view, all the actions contained will be set to \u003ccode\u003etrue\u003c/code\u003e on the view creation, the rest will be set to \u003ccode\u003efalse\u003c/code\u003e.\u003c/p\u003e\u003cp\u003eYou MUST use a leading _ (underscore) in the view name because other view names are reserved for OBP system views.\u003c/p\u003e",
+        "operationId": "vv3_0_0-createViewForBankAccount",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateViewJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ViewJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/views/{VIEW_ID}": {
+      "put": {
+        "tags": [
+          "Account-View"
+        ],
+        "summary": "Update View.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate an existing view on a bank account\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e\u003cp\u003eThe json sent is the same as during view creation (above), with one difference: the \u0027name\u0027 field of a view is not editable (it is only set when a view is created)\u003c/p\u003e",
+        "operationId": "vv3_0_0-updateViewForBankAccount",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateViewJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ViewJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidJsonFormat"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ViewIdsJson": {
+      "required": [
+        "views"
+      ],
+      "properties": {
+        "views": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ViewsJSONV121": {
+      "required": [
+        "views"
+      ],
+      "properties": {
+        "views": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewJSONV121"
+          }
+        }
+      }
+    },
+    "ViewJSONV121": {
+      "required": [
+        "id",
+        "short_name",
+        "description",
+        "is_public",
+        "alias",
+        "hide_metadata_if_alias_used",
+        "can_add_comment",
+        "can_add_corporate_location",
+        "can_add_image",
+        "can_add_image_url",
+        "can_add_more_info",
+        "can_add_open_corporates_url",
+        "can_add_physical_location",
+        "can_add_private_alias",
+        "can_add_public_alias",
+        "can_add_tag",
+        "can_add_url",
+        "can_add_where_tag",
+        "can_delete_comment",
+        "can_delete_corporate_location",
+        "can_delete_image",
+        "can_delete_physical_location",
+        "can_delete_tag",
+        "can_delete_where_tag",
+        "can_edit_owner_comment",
+        "can_see_bank_account_balance",
+        "can_see_bank_account_bank_name",
+        "can_see_bank_account_currency",
+        "can_see_bank_account_iban",
+        "can_see_bank_account_label",
+        "can_see_bank_account_national_identifier",
+        "can_see_bank_account_number",
+        "can_see_bank_account_owners",
+        "can_see_bank_account_swift_bic",
+        "can_see_bank_account_type",
+        "can_see_comments",
+        "can_see_corporate_location",
+        "can_see_image_url",
+        "can_see_images",
+        "can_see_more_info",
+        "can_see_open_corporates_url",
+        "can_see_other_account_bank_name",
+        "can_see_other_account_iban",
+        "can_see_other_account_kind",
+        "can_see_other_account_metadata",
+        "can_see_other_account_national_identifier",
+        "can_see_other_account_number",
+        "can_see_other_account_swift_bic",
+        "can_see_owner_comment",
+        "can_see_physical_location",
+        "can_see_private_alias",
+        "can_see_public_alias",
+        "can_see_tags",
+        "can_see_transaction_amount",
+        "can_see_transaction_balance",
+        "can_see_transaction_currency",
+        "can_see_transaction_description",
+        "can_see_transaction_finish_date",
+        "can_see_transaction_metadata",
+        "can_see_transaction_other_bank_account",
+        "can_see_transaction_start_date",
+        "can_see_transaction_this_bank_account",
+        "can_see_transaction_type",
+        "can_see_url",
+        "can_see_where_tag"
+      ],
+      "properties": {
+        "can_see_transaction_start_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_this_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_owners": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_edit_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "description": {
+          "type": "string",
+          "example": "description"
+        },
+        "can_see_transaction_other_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_comments": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_kind": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_label": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_finish_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_images": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "hide_metadata_if_alias_used": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "alias": {
+          "type": "string",
+          "example": "None"
+        },
+        "can_add_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "id": {
+          "type": "string",
+          "example": "123"
+        },
+        "can_see_bank_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_tags": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "short_name"
+        },
+        "can_delete_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_amount": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_description": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "PermissionsJSON": {
+      "required": [
+        "permissions"
+      ],
+      "properties": {
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PermissionJSON"
+          }
+        }
+      }
+    },
+    "PermissionJSON": {
+      "required": [
+        "user",
+        "views"
+      ],
+      "properties": {
+        "views": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewJSONV121"
+          }
+        },
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        }
+      }
+    },
+    "UserJSONV121": {
+      "required": [
+        "id",
+        "provider",
+        "display_name"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "CoreAccountsHeldJsonV300": {
+      "required": [
+        "accounts"
+      ],
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountHeldJson"
+          }
+        }
+      }
+    },
+    "AccountHeldJson": {
+      "required": [
+        "id",
+        "bank_id",
+        "number",
+        "account_routings"
+      ],
+      "properties": {
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "number": {
+          "type": "string",
+          "example": "123"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "id": {
+          "type": "string",
+          "example": "12314"
+        }
+      }
+    },
+    "AccountRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "4930396"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "AccountNumber"
+        }
+      }
+    },
+    "ErrorUnknownError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-50000: Unknown Error."
+        }
+      }
+    },
+    "ViewsJsonV300": {
+      "required": [
+        "views"
+      ],
+      "properties": {
+        "views": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewJsonV300"
+          }
+        }
+      }
+    },
+    "ViewJsonV300": {
+      "required": [
+        "id",
+        "short_name",
+        "description",
+        "metadata_view",
+        "is_public",
+        "alias",
+        "hide_metadata_if_alias_used",
+        "can_add_comment",
+        "can_add_corporate_location",
+        "can_add_image",
+        "can_add_image_url",
+        "can_add_more_info",
+        "can_add_open_corporates_url",
+        "can_add_physical_location",
+        "can_add_private_alias",
+        "can_add_public_alias",
+        "can_add_tag",
+        "can_add_url",
+        "can_add_where_tag",
+        "can_delete_comment",
+        "can_add_counterparty",
+        "can_delete_corporate_location",
+        "can_delete_image",
+        "can_delete_physical_location",
+        "can_delete_tag",
+        "can_delete_where_tag",
+        "can_edit_owner_comment",
+        "can_see_bank_account_balance",
+        "can_see_bank_account_bank_name",
+        "can_see_bank_account_currency",
+        "can_see_bank_account_iban",
+        "can_see_bank_account_label",
+        "can_see_bank_account_national_identifier",
+        "can_see_bank_account_number",
+        "can_see_bank_account_owners",
+        "can_see_bank_account_swift_bic",
+        "can_see_bank_account_type",
+        "can_see_comments",
+        "can_see_corporate_location",
+        "can_see_image_url",
+        "can_see_images",
+        "can_see_more_info",
+        "can_see_open_corporates_url",
+        "can_see_other_account_bank_name",
+        "can_see_other_account_iban",
+        "can_see_other_account_kind",
+        "can_see_other_account_metadata",
+        "can_see_other_account_national_identifier",
+        "can_see_other_account_number",
+        "can_see_other_account_swift_bic",
+        "can_see_owner_comment",
+        "can_see_physical_location",
+        "can_see_private_alias",
+        "can_see_public_alias",
+        "can_see_tags",
+        "can_see_transaction_amount",
+        "can_see_transaction_balance",
+        "can_see_transaction_currency",
+        "can_see_transaction_description",
+        "can_see_transaction_finish_date",
+        "can_see_transaction_metadata",
+        "can_see_transaction_other_bank_account",
+        "can_see_transaction_start_date",
+        "can_see_transaction_this_bank_account",
+        "can_see_transaction_type",
+        "can_see_url",
+        "can_see_where_tag",
+        "can_see_bank_routing_scheme",
+        "can_see_bank_routing_address",
+        "can_see_bank_account_routing_scheme",
+        "can_see_bank_account_routing_address",
+        "can_see_other_bank_routing_scheme",
+        "can_see_other_bank_routing_address",
+        "can_see_other_account_routing_scheme",
+        "can_see_other_account_routing_address",
+        "can_add_transaction_request_to_own_account",
+        "can_add_transaction_request_to_any_account",
+        "can_see_bank_account_credit_limit"
+      ],
+      "properties": {
+        "can_see_transaction_start_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_this_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_owners": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_routing_address": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_edit_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_routing_scheme": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "description": {
+          "type": "string",
+          "example": "description"
+        },
+        "can_see_bank_account_routing_scheme": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_other_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_comments": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_kind": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_transaction_request_to_own_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_label": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_finish_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_routing_address": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_images": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_credit_limit": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "hide_metadata_if_alias_used": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "alias": {
+          "type": "string",
+          "example": "No"
+        },
+        "can_add_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "id": {
+          "type": "string",
+          "example": "1234"
+        },
+        "can_see_bank_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_counterparty": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_transaction_request_to_any_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_tags": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "short_name"
+        },
+        "can_delete_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_routing_scheme": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_routing_address": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_bank_routing_address": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "metadata_view": {
+          "type": "string",
+          "example": "owner"
+        },
+        "can_see_transaction_amount": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_bank_routing_scheme": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_description": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "CreateViewJson": {
+      "required": [
+        "name",
+        "description",
+        "metadata_view",
+        "is_public",
+        "which_alias_to_use",
+        "hide_metadata_if_alias_used",
+        "allowed_actions"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "_test"
+        },
+        "description": {
+          "type": "string",
+          "example": "This view is for family"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "hide_metadata_if_alias_used": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "which_alias_to_use": {
+          "type": "string",
+          "example": "family"
+        },
+        "metadata_view": {
+          "type": "string",
+          "example": "owner"
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "UpdateViewJSON": {
+      "required": [
+        "description",
+        "metadata_view",
+        "is_public",
+        "which_alias_to_use",
+        "hide_metadata_if_alias_used",
+        "allowed_actions"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "this is for family"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "hide_metadata_if_alias_used": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "which_alias_to_use": {
+          "type": "string",
+          "example": "family"
+        },
+        "metadata_view": {
+          "type": "string",
+          "example": "owner"
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ErrorInvalidJsonFormat": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10001: Incorrect json format."
+        }
+      }
+    }
+  }
+}

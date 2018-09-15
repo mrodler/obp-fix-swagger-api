@@ -1,0 +1,1184 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Transaction-Request",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-transaction-request",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.4.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-request-types": {
+      "get": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Get Transaction Request Types for Account",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the Transation Request Types that the account specified by ACCOUNT_ID and view specified by VIEW_ID has access to.\u003c/p\u003e\u003cp\u003eThese are the ways this API Server can create a Transaction via a Transaction Request (as opposed to Transaction Types which include external types too e.g. for Transactions created by core banking etc.)\u003c/p\u003e\u003cp\u003eA Transaction Request Type internally determines:\u003c/p\u003e\u003cul\u003e  \u003cli\u003ethe required Transaction Request \u0027body\u0027 i.e. fields that define the \u0027what\u0027 and \u0027to\u0027 of a Transaction Request,\u003c/li\u003e  \u003cli\u003ethe type of security challenge that may be be raised before the Transaction Request proceeds, and\u003c/li\u003e  \u003cli\u003ethe threshold of that challenge.\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eFor instance in a \u0027SANDBOX_TAN\u0027 Transaction Request, for amounts over 1000 currency units, the user must supply a positive integer to complete the Transaction Request and create a Transaction.\u003c/p\u003e\u003cp\u003eThis approach aims to provide only one endpoint for initiating transactions, and one that handles challenges, whilst still allowing flexibility with the payload and internal logic.\u003c/p\u003e",
+        "operationId": "vv1_4_0-getTransactionRequestTypes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestTypesJsonV140"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-request-types/COUNTERPARTY/transaction-requests": {
+      "post": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Create Transaction Request (COUNTERPARTY)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eSpecial instructions for COUNTERPARTY:\u003c/p\u003e\u003cp\u003eWhen using a COUNTERPARTY to create a Transaction Request, specificy the counterparty_id in the body of the request. The routing details of the counterparty will be forwarded for the transfer.\u003c/p\u003e\u003cp\u003eInitiate a Payment via creating a Transaction Request.\u003c/p\u003e\u003cp\u003eIn OBP, a \u003ccode\u003etransaction request\u003c/code\u003e may or may not result in a \u003ccode\u003etransaction\u003c/code\u003e. However, a \u003ccode\u003etransaction\u003c/code\u003e only has one possible state: completed.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e can have one of several states.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransactions\u003c/code\u003e are modeled on items in a bank statement that represent the movement of money.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransaction Requests\u003c/code\u003e are requests to move money which may or may not succeeed and thus result in a \u003ccode\u003eTransaction\u003c/code\u003e.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e might create a security challenge that needs to be answered before the \u003ccode\u003eTransaction Request\u003c/code\u003e proceeds.\u003c/p\u003e\u003cp\u003eTransaction Requests contain charge information giving the client the opportunity to proceed or not (as long as the challenge level is appropriate).\u003c/p\u003e\u003cp\u003eTransaction Requests can have one of several Transaction Request Types which expect different bodies. The escaped body is returned in the details key of the GET response. This provides some commonality and one URL for many different payment or transfer types with enough flexibility to validate them differently.\u003c/p\u003e\u003cp\u003eThe payer is set in the URL. Money comes out of the BANK_ID and ACCOUNT_ID specified in the URL.\u003c/p\u003e\u003cp\u003eIn sandbox mode, TRANSACTION_REQUEST_TYPE is commonly set to SANDBOX_TAN. See getTransactionRequestTypesSupportedByBank for all supported types.\u003c/p\u003e\u003cp\u003eIn sandbox mode, if the amount is less than 1000 EUR (any currency, unless it is set differently on this server), the transaction request will create a transaction without a challenge, else the Transaction Request will be set to INITIALISED and a challenge will need to be answered.\u003c/p\u003e\u003cp\u003eIf a challenge is created you must answer it using Answer Transaction Request Challenge before the Transaction is created.\u003c/p\u003e\u003cp\u003eYou can transfer between different currency accounts. (new in 2.0.0). The currency in body must match the sending account.\u003c/p\u003e\u003cp\u003eThe following static FX rates are available in sandbox mode:\u003c/p\u003e\u003cp\u003e{  \"XAF\":{  \"AUD\":0.00228226,  \"KRW\":1.87975,  \"JOD\":0.00127784,  \"GBP\":0.00131092,  \"AED\":0.00601555,  \"INR\":0.110241,  \"JPY\":0.185328,  \"USD\":0.00163773,  \"ILS\":0.00641333,  \"EUR\":0.00152449  },  \"AUD\":{  \"XAF\":438.162,  \"KRW\":895.304,  \"JOD\":0.556152,  \"GBP\":0.609788,  \"AED\":2.88368,  \"INR\":50.4238,  \"JPY\":87.0936,  \"USD\":0.785256,  \"ILS\":2.83558,  \"EUR\":0.667969  },  \"KRW\":{  \"XAF\":0.531986,  \"AUD\":0.00111694,  \"JOD\":6.30634E-4,  \"GBP\":6.97389E-4,  \"AED\":0.00320019,  \"INR\":0.0586469,  \"JPY\":0.0985917,  \"USD\":8.7125E-4,  \"ILS\":0.00316552,  \"EUR\":8.11008E-4  },  \"JOD\":{  \"XAF\":782.572,  \"AUD\":1.63992,  \"KRW\":1585.68,  \"GBP\":1.06757,  \"AED\":5.18231,  \"INR\":90.1236,  \"JPY\":156.304,  \"USD\":1.41112,  \"ILS\":5.02018,  \"EUR\":0.237707  },  \"GBP\":{  \"XAF\":762.826,  \"AUD\":1.63992,  \"KRW\":1433.92,  \"JOD\":0.936707,  \"AED\":4.58882,  \"INR\":84.095,  \"JPY\":141.373,  \"USD\":1.2493,  \"ILS\":4.7002,  \"EUR\":1.16278  },  \"AED\":{  \"XAF\":166.236,  \"AUD\":0.346779,  \"KRW\":312.482,  \"GBP\":0.217921,  \"AED\":0.192964,  \"INR\":18.3255,  \"JPY\":30.8081,  \"USD\":0.27225,  \"ILS\":0.968033,  \"EUR\":0.253425  },  \"INR\":{  \"XAF\":9.07101,  \"AUD\":0.0198319,  \"KRW\":17.0512,  \"JOD\":0.0110959,  \"GBP\":0.0118913,  \"AED\":0.0545671,  \"JPY\":1.68111,  \"USD\":0.0148559,  \"ILS\":0.0556764,  \"EUR\":0.0138287  },  \"JPY\":{  \"XAF\":5.39585,  \"AUD\":0.0114819,  \"KRW\":10.1428,  \"JOD\":0.00639777,  \"GBP\":0.0070735,  \"AED\":0.032459,  \"INR\":0.594846,  \"USD\":0.00883695,  \"ILS\":0.0320926,  \"EUR\":0.00822592  },  \"USD\":{  \"XAF\":610.601,  \"AUD\":1.27347,  \"KRW\":1147.78,  \"JOD\":0.708659,  \"GBP\":0.800446,  \"AED\":3.6731,  \"INR\":67.3135,  \"JPY\":113.161,  \"ILS\":3.55495,  \"EUR\":0.930886  },  \"ILS\":{  \"XAF\":155.925,  \"AUD\":0.352661,  \"KRW\":315.903,  \"JOD\":0.199196,  \"GBP\":0.212763,  \"AED\":1.03302,  \"INR\":17.9609,  \"JPY\":31.1599,  \"USD\":0.281298,  \"EUR\":1.19318  },  \"EUR\":{  \"XAF\":655.957,  \"AUD\":1.49707,  \"KRW\":1233.03,  \"JOD\":0.838098,  \"GBP\":0.860011,  \"AED\":3.94594,  \"INR\":72.3136,  \"JPY\":121.567,  \"USD\":1.07428,  \"ILS\":4.20494  } }\u003c/p\u003e\u003cp\u003eTransaction Requests satisfy PSD2 requirements thus:\u003c/p\u003e\u003cp\u003e1) A transaction can be initiated by a third party application.\u003c/p\u003e\u003cp\u003e2) The customer is informed of the charge that will incurred.\u003c/p\u003e\u003cp\u003e3) The call supports delegated authentication (OAuth)\u003c/p\u003e\u003cp\u003eSee \u003ca href\u003d\"https://github.com/OpenBankProject/Hello-OBP-DirectLogin-Python/blob/master/hello_payments.py\"\u003ethis python code\u003c/a\u003e for a complete example of this flow.\u003c/p\u003e\u003cp\u003eThere is further documentation \u003ca href\u003d\"https://github.com/OpenBankProject/OBP-API/wiki/Transaction-Requests\"\u003ehere\u003c/a\u003e\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-createTransactionRequestCouterparty",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestBodyCounterpartyJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestWithChargeJSON210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-request-types/FREE_FORM/transaction-requests": {
+      "post": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Create Transaction Request (FREE_FORM).",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eInitiate a Payment via creating a Transaction Request.\u003c/p\u003e\u003cp\u003eIn OBP, a \u003ccode\u003etransaction request\u003c/code\u003e may or may not result in a \u003ccode\u003etransaction\u003c/code\u003e. However, a \u003ccode\u003etransaction\u003c/code\u003e only has one possible state: completed.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e can have one of several states.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransactions\u003c/code\u003e are modeled on items in a bank statement that represent the movement of money.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransaction Requests\u003c/code\u003e are requests to move money which may or may not succeeed and thus result in a \u003ccode\u003eTransaction\u003c/code\u003e.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e might create a security challenge that needs to be answered before the \u003ccode\u003eTransaction Request\u003c/code\u003e proceeds.\u003c/p\u003e\u003cp\u003eTransaction Requests contain charge information giving the client the opportunity to proceed or not (as long as the challenge level is appropriate).\u003c/p\u003e\u003cp\u003eTransaction Requests can have one of several Transaction Request Types which expect different bodies. The escaped body is returned in the details key of the GET response. This provides some commonality and one URL for many different payment or transfer types with enough flexibility to validate them differently.\u003c/p\u003e\u003cp\u003eThe payer is set in the URL. Money comes out of the BANK_ID and ACCOUNT_ID specified in the URL.\u003c/p\u003e\u003cp\u003eIn sandbox mode, TRANSACTION_REQUEST_TYPE is commonly set to SANDBOX_TAN. See getTransactionRequestTypesSupportedByBank for all supported types.\u003c/p\u003e\u003cp\u003eIn sandbox mode, if the amount is less than 1000 EUR (any currency, unless it is set differently on this server), the transaction request will create a transaction without a challenge, else the Transaction Request will be set to INITIALISED and a challenge will need to be answered.\u003c/p\u003e\u003cp\u003eIf a challenge is created you must answer it using Answer Transaction Request Challenge before the Transaction is created.\u003c/p\u003e\u003cp\u003eYou can transfer between different currency accounts. (new in 2.0.0). The currency in body must match the sending account.\u003c/p\u003e\u003cp\u003eThe following static FX rates are available in sandbox mode:\u003c/p\u003e\u003cp\u003e{  \"XAF\":{  \"AUD\":0.00228226,  \"KRW\":1.87975,  \"JOD\":0.00127784,  \"GBP\":0.00131092,  \"AED\":0.00601555,  \"INR\":0.110241,  \"JPY\":0.185328,  \"USD\":0.00163773,  \"ILS\":0.00641333,  \"EUR\":0.00152449  },  \"AUD\":{  \"XAF\":438.162,  \"KRW\":895.304,  \"JOD\":0.556152,  \"GBP\":0.609788,  \"AED\":2.88368,  \"INR\":50.4238,  \"JPY\":87.0936,  \"USD\":0.785256,  \"ILS\":2.83558,  \"EUR\":0.667969  },  \"KRW\":{  \"XAF\":0.531986,  \"AUD\":0.00111694,  \"JOD\":6.30634E-4,  \"GBP\":6.97389E-4,  \"AED\":0.00320019,  \"INR\":0.0586469,  \"JPY\":0.0985917,  \"USD\":8.7125E-4,  \"ILS\":0.00316552,  \"EUR\":8.11008E-4  },  \"JOD\":{  \"XAF\":782.572,  \"AUD\":1.63992,  \"KRW\":1585.68,  \"GBP\":1.06757,  \"AED\":5.18231,  \"INR\":90.1236,  \"JPY\":156.304,  \"USD\":1.41112,  \"ILS\":5.02018,  \"EUR\":0.237707  },  \"GBP\":{  \"XAF\":762.826,  \"AUD\":1.63992,  \"KRW\":1433.92,  \"JOD\":0.936707,  \"AED\":4.58882,  \"INR\":84.095,  \"JPY\":141.373,  \"USD\":1.2493,  \"ILS\":4.7002,  \"EUR\":1.16278  },  \"AED\":{  \"XAF\":166.236,  \"AUD\":0.346779,  \"KRW\":312.482,  \"GBP\":0.217921,  \"AED\":0.192964,  \"INR\":18.3255,  \"JPY\":30.8081,  \"USD\":0.27225,  \"ILS\":0.968033,  \"EUR\":0.253425  },  \"INR\":{  \"XAF\":9.07101,  \"AUD\":0.0198319,  \"KRW\":17.0512,  \"JOD\":0.0110959,  \"GBP\":0.0118913,  \"AED\":0.0545671,  \"JPY\":1.68111,  \"USD\":0.0148559,  \"ILS\":0.0556764,  \"EUR\":0.0138287  },  \"JPY\":{  \"XAF\":5.39585,  \"AUD\":0.0114819,  \"KRW\":10.1428,  \"JOD\":0.00639777,  \"GBP\":0.0070735,  \"AED\":0.032459,  \"INR\":0.594846,  \"USD\":0.00883695,  \"ILS\":0.0320926,  \"EUR\":0.00822592  },  \"USD\":{  \"XAF\":610.601,  \"AUD\":1.27347,  \"KRW\":1147.78,  \"JOD\":0.708659,  \"GBP\":0.800446,  \"AED\":3.6731,  \"INR\":67.3135,  \"JPY\":113.161,  \"ILS\":3.55495,  \"EUR\":0.930886  },  \"ILS\":{  \"XAF\":155.925,  \"AUD\":0.352661,  \"KRW\":315.903,  \"JOD\":0.199196,  \"GBP\":0.212763,  \"AED\":1.03302,  \"INR\":17.9609,  \"JPY\":31.1599,  \"USD\":0.281298,  \"EUR\":1.19318  },  \"EUR\":{  \"XAF\":655.957,  \"AUD\":1.49707,  \"KRW\":1233.03,  \"JOD\":0.838098,  \"GBP\":0.860011,  \"AED\":3.94594,  \"INR\":72.3136,  \"JPY\":121.567,  \"USD\":1.07428,  \"ILS\":4.20494  } }\u003c/p\u003e\u003cp\u003eTransaction Requests satisfy PSD2 requirements thus:\u003c/p\u003e\u003cp\u003e1) A transaction can be initiated by a third party application.\u003c/p\u003e\u003cp\u003e2) The customer is informed of the charge that will incurred.\u003c/p\u003e\u003cp\u003e3) The call supports delegated authentication (OAuth)\u003c/p\u003e\u003cp\u003eSee \u003ca href\u003d\"https://github.com/OpenBankProject/Hello-OBP-DirectLogin-Python/blob/master/hello_payments.py\"\u003ethis python code\u003c/a\u003e for a complete example of this flow.\u003c/p\u003e\u003cp\u003eThere is further documentation \u003ca href\u003d\"https://github.com/OpenBankProject/OBP-API/wiki/Transaction-Requests\"\u003ehere\u003c/a\u003e\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-createTransactionRequestFreeForm",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestBodyJsonV200"
+            }
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestWithChargeJSON210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-request-types/SANDBOX_TAN/transaction-requests": {
+      "post": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Create Transaction Request (SANDBOX_TAN)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eWhen using SANDBOX_TAN, the payee is set in the request body.\u003c/p\u003e\u003cp\u003eMoney goes into the BANK_ID and ACCOUNT_ID specified in the request body.\u003c/p\u003e\u003cp\u003eInitiate a Payment via creating a Transaction Request.\u003c/p\u003e\u003cp\u003eIn OBP, a \u003ccode\u003etransaction request\u003c/code\u003e may or may not result in a \u003ccode\u003etransaction\u003c/code\u003e. However, a \u003ccode\u003etransaction\u003c/code\u003e only has one possible state: completed.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e can have one of several states.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransactions\u003c/code\u003e are modeled on items in a bank statement that represent the movement of money.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransaction Requests\u003c/code\u003e are requests to move money which may or may not succeeed and thus result in a \u003ccode\u003eTransaction\u003c/code\u003e.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e might create a security challenge that needs to be answered before the \u003ccode\u003eTransaction Request\u003c/code\u003e proceeds.\u003c/p\u003e\u003cp\u003eTransaction Requests contain charge information giving the client the opportunity to proceed or not (as long as the challenge level is appropriate).\u003c/p\u003e\u003cp\u003eTransaction Requests can have one of several Transaction Request Types which expect different bodies. The escaped body is returned in the details key of the GET response. This provides some commonality and one URL for many different payment or transfer types with enough flexibility to validate them differently.\u003c/p\u003e\u003cp\u003eThe payer is set in the URL. Money comes out of the BANK_ID and ACCOUNT_ID specified in the URL.\u003c/p\u003e\u003cp\u003eIn sandbox mode, TRANSACTION_REQUEST_TYPE is commonly set to SANDBOX_TAN. See getTransactionRequestTypesSupportedByBank for all supported types.\u003c/p\u003e\u003cp\u003eIn sandbox mode, if the amount is less than 1000 EUR (any currency, unless it is set differently on this server), the transaction request will create a transaction without a challenge, else the Transaction Request will be set to INITIALISED and a challenge will need to be answered.\u003c/p\u003e\u003cp\u003eIf a challenge is created you must answer it using Answer Transaction Request Challenge before the Transaction is created.\u003c/p\u003e\u003cp\u003eYou can transfer between different currency accounts. (new in 2.0.0). The currency in body must match the sending account.\u003c/p\u003e\u003cp\u003eThe following static FX rates are available in sandbox mode:\u003c/p\u003e\u003cp\u003e{  \"XAF\":{  \"AUD\":0.00228226,  \"KRW\":1.87975,  \"JOD\":0.00127784,  \"GBP\":0.00131092,  \"AED\":0.00601555,  \"INR\":0.110241,  \"JPY\":0.185328,  \"USD\":0.00163773,  \"ILS\":0.00641333,  \"EUR\":0.00152449  },  \"AUD\":{  \"XAF\":438.162,  \"KRW\":895.304,  \"JOD\":0.556152,  \"GBP\":0.609788,  \"AED\":2.88368,  \"INR\":50.4238,  \"JPY\":87.0936,  \"USD\":0.785256,  \"ILS\":2.83558,  \"EUR\":0.667969  },  \"KRW\":{  \"XAF\":0.531986,  \"AUD\":0.00111694,  \"JOD\":6.30634E-4,  \"GBP\":6.97389E-4,  \"AED\":0.00320019,  \"INR\":0.0586469,  \"JPY\":0.0985917,  \"USD\":8.7125E-4,  \"ILS\":0.00316552,  \"EUR\":8.11008E-4  },  \"JOD\":{  \"XAF\":782.572,  \"AUD\":1.63992,  \"KRW\":1585.68,  \"GBP\":1.06757,  \"AED\":5.18231,  \"INR\":90.1236,  \"JPY\":156.304,  \"USD\":1.41112,  \"ILS\":5.02018,  \"EUR\":0.237707  },  \"GBP\":{  \"XAF\":762.826,  \"AUD\":1.63992,  \"KRW\":1433.92,  \"JOD\":0.936707,  \"AED\":4.58882,  \"INR\":84.095,  \"JPY\":141.373,  \"USD\":1.2493,  \"ILS\":4.7002,  \"EUR\":1.16278  },  \"AED\":{  \"XAF\":166.236,  \"AUD\":0.346779,  \"KRW\":312.482,  \"GBP\":0.217921,  \"AED\":0.192964,  \"INR\":18.3255,  \"JPY\":30.8081,  \"USD\":0.27225,  \"ILS\":0.968033,  \"EUR\":0.253425  },  \"INR\":{  \"XAF\":9.07101,  \"AUD\":0.0198319,  \"KRW\":17.0512,  \"JOD\":0.0110959,  \"GBP\":0.0118913,  \"AED\":0.0545671,  \"JPY\":1.68111,  \"USD\":0.0148559,  \"ILS\":0.0556764,  \"EUR\":0.0138287  },  \"JPY\":{  \"XAF\":5.39585,  \"AUD\":0.0114819,  \"KRW\":10.1428,  \"JOD\":0.00639777,  \"GBP\":0.0070735,  \"AED\":0.032459,  \"INR\":0.594846,  \"USD\":0.00883695,  \"ILS\":0.0320926,  \"EUR\":0.00822592  },  \"USD\":{  \"XAF\":610.601,  \"AUD\":1.27347,  \"KRW\":1147.78,  \"JOD\":0.708659,  \"GBP\":0.800446,  \"AED\":3.6731,  \"INR\":67.3135,  \"JPY\":113.161,  \"ILS\":3.55495,  \"EUR\":0.930886  },  \"ILS\":{  \"XAF\":155.925,  \"AUD\":0.352661,  \"KRW\":315.903,  \"JOD\":0.199196,  \"GBP\":0.212763,  \"AED\":1.03302,  \"INR\":17.9609,  \"JPY\":31.1599,  \"USD\":0.281298,  \"EUR\":1.19318  },  \"EUR\":{  \"XAF\":655.957,  \"AUD\":1.49707,  \"KRW\":1233.03,  \"JOD\":0.838098,  \"GBP\":0.860011,  \"AED\":3.94594,  \"INR\":72.3136,  \"JPY\":121.567,  \"USD\":1.07428,  \"ILS\":4.20494  } }\u003c/p\u003e\u003cp\u003eTransaction Requests satisfy PSD2 requirements thus:\u003c/p\u003e\u003cp\u003e1) A transaction can be initiated by a third party application.\u003c/p\u003e\u003cp\u003e2) The customer is informed of the charge that will incurred.\u003c/p\u003e\u003cp\u003e3) The call supports delegated authentication (OAuth)\u003c/p\u003e\u003cp\u003eSee \u003ca href\u003d\"https://github.com/OpenBankProject/Hello-OBP-DirectLogin-Python/blob/master/hello_payments.py\"\u003ethis python code\u003c/a\u003e for a complete example of this flow.\u003c/p\u003e\u003cp\u003eThere is further documentation \u003ca href\u003d\"https://github.com/OpenBankProject/OBP-API/wiki/Transaction-Requests\"\u003ehere\u003c/a\u003e\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-createTransactionRequestSandboxTan",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestBodyJsonV200"
+            }
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestWithChargeJSON210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-request-types/SEPA/transaction-requests": {
+      "post": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Create Transaction Request (SEPA)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eSpecial instructions for SEPA:\u003c/p\u003e\u003cp\u003eWhen using a SEPA Transaction Request, you specify the IBAN of a Counterparty in the body of the request. The routing details (IBAN) of the counterparty will be forwarded to the core banking system for the transfer.\u003c/p\u003e\u003cp\u003eInitiate a Payment via creating a Transaction Request.\u003c/p\u003e\u003cp\u003eIn OBP, a \u003ccode\u003etransaction request\u003c/code\u003e may or may not result in a \u003ccode\u003etransaction\u003c/code\u003e. However, a \u003ccode\u003etransaction\u003c/code\u003e only has one possible state: completed.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e can have one of several states.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransactions\u003c/code\u003e are modeled on items in a bank statement that represent the movement of money.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eTransaction Requests\u003c/code\u003e are requests to move money which may or may not succeeed and thus result in a \u003ccode\u003eTransaction\u003c/code\u003e.\u003c/p\u003e\u003cp\u003eA \u003ccode\u003eTransaction Request\u003c/code\u003e might create a security challenge that needs to be answered before the \u003ccode\u003eTransaction Request\u003c/code\u003e proceeds.\u003c/p\u003e\u003cp\u003eTransaction Requests contain charge information giving the client the opportunity to proceed or not (as long as the challenge level is appropriate).\u003c/p\u003e\u003cp\u003eTransaction Requests can have one of several Transaction Request Types which expect different bodies. The escaped body is returned in the details key of the GET response. This provides some commonality and one URL for many different payment or transfer types with enough flexibility to validate them differently.\u003c/p\u003e\u003cp\u003eThe payer is set in the URL. Money comes out of the BANK_ID and ACCOUNT_ID specified in the URL.\u003c/p\u003e\u003cp\u003eIn sandbox mode, TRANSACTION_REQUEST_TYPE is commonly set to SANDBOX_TAN. See getTransactionRequestTypesSupportedByBank for all supported types.\u003c/p\u003e\u003cp\u003eIn sandbox mode, if the amount is less than 1000 EUR (any currency, unless it is set differently on this server), the transaction request will create a transaction without a challenge, else the Transaction Request will be set to INITIALISED and a challenge will need to be answered.\u003c/p\u003e\u003cp\u003eIf a challenge is created you must answer it using Answer Transaction Request Challenge before the Transaction is created.\u003c/p\u003e\u003cp\u003eYou can transfer between different currency accounts. (new in 2.0.0). The currency in body must match the sending account.\u003c/p\u003e\u003cp\u003eThe following static FX rates are available in sandbox mode:\u003c/p\u003e\u003cp\u003e{  \"XAF\":{  \"AUD\":0.00228226,  \"KRW\":1.87975,  \"JOD\":0.00127784,  \"GBP\":0.00131092,  \"AED\":0.00601555,  \"INR\":0.110241,  \"JPY\":0.185328,  \"USD\":0.00163773,  \"ILS\":0.00641333,  \"EUR\":0.00152449  },  \"AUD\":{  \"XAF\":438.162,  \"KRW\":895.304,  \"JOD\":0.556152,  \"GBP\":0.609788,  \"AED\":2.88368,  \"INR\":50.4238,  \"JPY\":87.0936,  \"USD\":0.785256,  \"ILS\":2.83558,  \"EUR\":0.667969  },  \"KRW\":{  \"XAF\":0.531986,  \"AUD\":0.00111694,  \"JOD\":6.30634E-4,  \"GBP\":6.97389E-4,  \"AED\":0.00320019,  \"INR\":0.0586469,  \"JPY\":0.0985917,  \"USD\":8.7125E-4,  \"ILS\":0.00316552,  \"EUR\":8.11008E-4  },  \"JOD\":{  \"XAF\":782.572,  \"AUD\":1.63992,  \"KRW\":1585.68,  \"GBP\":1.06757,  \"AED\":5.18231,  \"INR\":90.1236,  \"JPY\":156.304,  \"USD\":1.41112,  \"ILS\":5.02018,  \"EUR\":0.237707  },  \"GBP\":{  \"XAF\":762.826,  \"AUD\":1.63992,  \"KRW\":1433.92,  \"JOD\":0.936707,  \"AED\":4.58882,  \"INR\":84.095,  \"JPY\":141.373,  \"USD\":1.2493,  \"ILS\":4.7002,  \"EUR\":1.16278  },  \"AED\":{  \"XAF\":166.236,  \"AUD\":0.346779,  \"KRW\":312.482,  \"GBP\":0.217921,  \"AED\":0.192964,  \"INR\":18.3255,  \"JPY\":30.8081,  \"USD\":0.27225,  \"ILS\":0.968033,  \"EUR\":0.253425  },  \"INR\":{  \"XAF\":9.07101,  \"AUD\":0.0198319,  \"KRW\":17.0512,  \"JOD\":0.0110959,  \"GBP\":0.0118913,  \"AED\":0.0545671,  \"JPY\":1.68111,  \"USD\":0.0148559,  \"ILS\":0.0556764,  \"EUR\":0.0138287  },  \"JPY\":{  \"XAF\":5.39585,  \"AUD\":0.0114819,  \"KRW\":10.1428,  \"JOD\":0.00639777,  \"GBP\":0.0070735,  \"AED\":0.032459,  \"INR\":0.594846,  \"USD\":0.00883695,  \"ILS\":0.0320926,  \"EUR\":0.00822592  },  \"USD\":{  \"XAF\":610.601,  \"AUD\":1.27347,  \"KRW\":1147.78,  \"JOD\":0.708659,  \"GBP\":0.800446,  \"AED\":3.6731,  \"INR\":67.3135,  \"JPY\":113.161,  \"ILS\":3.55495,  \"EUR\":0.930886  },  \"ILS\":{  \"XAF\":155.925,  \"AUD\":0.352661,  \"KRW\":315.903,  \"JOD\":0.199196,  \"GBP\":0.212763,  \"AED\":1.03302,  \"INR\":17.9609,  \"JPY\":31.1599,  \"USD\":0.281298,  \"EUR\":1.19318  },  \"EUR\":{  \"XAF\":655.957,  \"AUD\":1.49707,  \"KRW\":1233.03,  \"JOD\":0.838098,  \"GBP\":0.860011,  \"AED\":3.94594,  \"INR\":72.3136,  \"JPY\":121.567,  \"USD\":1.07428,  \"ILS\":4.20494  } }\u003c/p\u003e\u003cp\u003eTransaction Requests satisfy PSD2 requirements thus:\u003c/p\u003e\u003cp\u003e1) A transaction can be initiated by a third party application.\u003c/p\u003e\u003cp\u003e2) The customer is informed of the charge that will incurred.\u003c/p\u003e\u003cp\u003e3) The call supports delegated authentication (OAuth)\u003c/p\u003e\u003cp\u003eSee \u003ca href\u003d\"https://github.com/OpenBankProject/Hello-OBP-DirectLogin-Python/blob/master/hello_payments.py\"\u003ethis python code\u003c/a\u003e for a complete example of this flow.\u003c/p\u003e\u003cp\u003eThere is further documentation \u003ca href\u003d\"https://github.com/OpenBankProject/OBP-API/wiki/Transaction-Requests\"\u003ehere\u003c/a\u003e\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-createTransactionRequestSepa",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestBodySEPAJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestWithChargeJSON210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-request-types/{TRANSACTION_REQUEST_TYPE}/transaction-requests/{TRANSACTION_REQUEST_ID}/challenge": {
+      "post": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Answer Transaction Request Challenge.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eIn Sandbox mode, any string that can be converted to a positive integer will be accepted as an answer.\u003c/p\u003e\u003cp\u003eThis endpoint totally depends on createTransactionRequest, it need get the following data from createTransactionRequest response body.\u003c/p\u003e\u003cp\u003e1)\u003ccode\u003eTRANSACTION_REQUEST_TYPE\u003c/code\u003e : is the same as createTransactionRequest request URL . \u003c/p\u003e\u003cp\u003e2)\u003ccode\u003eTRANSACTION_REQUEST_ID\u003c/code\u003e : is the \u003ccode\u003eid\u003c/code\u003e field in createTransactionRequest response body.\u003c/p\u003e\u003cp\u003e3) \u003ccode\u003eid\u003c/code\u003e : is \u003ccode\u003echallenge.id\u003c/code\u003e field in createTransactionRequest response body. \u003c/p\u003e\u003cp\u003e4) \u003ccode\u003eanswer\u003c/code\u003e : must be \u003ccode\u003e123\u003c/code\u003e. if it is in sandbox mode. If it kafka mode, the answer can be got by phone message or other security ways.\u003c/p\u003e",
+        "operationId": "vv2_1_0-answerTransactionRequestChallenge",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChallengeAnswerJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_REQUEST_ID",
+            "description": "The transaction request id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_REQUEST_TYPE",
+            "description": "The transaction request type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestWithChargeJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transaction-requests": {
+      "get": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Get Transaction Requests.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns transaction requests for account specified by ACCOUNT_ID at bank specified by BANK_ID.\u003c/p\u003e\u003cp\u003eThe VIEW_ID specified must be \u0027owner\u0027 and the user must have access to this view.\u003c/p\u003e\u003cp\u003eVersion 2.0.0 now returns charge information.\u003c/p\u003e\u003cp\u003eTransaction Requests serve to initiate transactions that may or may not proceed. They contain information including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eTransaction Request Id\u003c/li\u003e  \u003cli\u003eType\u003c/li\u003e  \u003cli\u003eStatus (INITIATED, COMPLETED)\u003c/li\u003e  \u003cli\u003eChallenge (in order to confirm the request)\u003c/li\u003e  \u003cli\u003eFrom Bank / Account\u003c/li\u003e  \u003cli\u003eDetails including Currency, Value, Description and other initiation information specific to each type. (Could potentialy include a list of future transactions.)\u003c/li\u003e  \u003cli\u003eRelated Transactions\u003c/li\u003e\u003c/ul\u003e\u003cp\u003ePSD2 Context: PSD2 requires transparency of charges to the customer. This endpoint provides the charge that would be applied if the Transaction Request proceeds - and a record of that charge there after. The customer can proceed with the Transaction by answering the security challenge.\u003c/p\u003e",
+        "operationId": "vv2_1_0-getTransactionRequests",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestWithChargeJSONs210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/transaction-request-types": {
+      "get": {
+        "tags": [
+          "Transaction-Request"
+        ],
+        "summary": "Get supported Transaction Request Types",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the list of the Transaction Request Types supported by the bank.\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv2_1_0-getTransactionRequestTypesSupportedByBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestTypesJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TransactionRequestTypesJsonV140": {
+      "required": [
+        "transaction_request_types"
+      ],
+      "properties": {
+        "transaction_request_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionRequestTypeJsonV140"
+          }
+        }
+      }
+    },
+    "TransactionRequestTypeJsonV140": {
+      "required": [
+        "value",
+        "charge"
+      ],
+      "properties": {
+        "charge": {
+          "$ref": "#/definitions/TransactionRequestChargeJsonV140"
+        },
+        "value": {
+          "type": "string",
+          "example": "10"
+        }
+      }
+    },
+    "TransactionRequestChargeJsonV140": {
+      "required": [
+        "summary",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "summary": {
+          "type": "string",
+          "example": "The bank fixed charge"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "TransactionRequestBodyCounterpartyJSON": {
+      "required": [
+        "to",
+        "value",
+        "description",
+        "charge_policy"
+      ],
+      "properties": {
+        "charge_policy": {
+          "type": "string",
+          "example": "SHARED"
+        },
+        "description": {
+          "type": "string",
+          "example": "A description for the transaction to the counterparty"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "to": {
+          "$ref": "#/definitions/CounterpartyIdJson"
+        }
+      }
+    },
+    "CounterpartyIdJson": {
+      "required": [
+        "counterparty_id"
+      ],
+      "properties": {
+        "counterparty_id": {
+          "type": "string",
+          "example": "123456"
+        }
+      }
+    },
+    "TransactionRequestWithChargeJSON210": {
+      "required": [
+        "id",
+        "type",
+        "from",
+        "details",
+        "transaction_ids",
+        "status",
+        "start_date",
+        "end_date",
+        "challenge",
+        "charge"
+      ],
+      "properties": {
+        "challenge": {
+          "$ref": "#/definitions/ChallengeJsonV140"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "id": {
+          "type": "string",
+          "example": "4050046c-63b3-4868-8a22-14b4181d33a6"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "status": {
+          "type": "string",
+          "example": "COMPLETED"
+        },
+        "from": {
+          "$ref": "#/definitions/TransactionRequestAccountJsonV140"
+        },
+        "details": {
+          "$ref": "#/definitions/TransactionRequestBodyAllTypes"
+        },
+        "charge": {
+          "$ref": "#/definitions/TransactionRequestChargeJsonV200"
+        },
+        "type": {
+          "type": "string",
+          "example": "SANDBOX_TAN"
+        },
+        "transaction_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ChallengeJsonV140": {
+      "required": [
+        "id",
+        "allowed_attempts",
+        "challenge_type"
+      ],
+      "properties": {
+        "challenge_type": {
+          "type": "string",
+          "example": "SANDBOX_TAN"
+        },
+        "allowed_attempts": {
+          "type": "integer",
+          "format": "int32",
+          "example": "3"
+        },
+        "id": {
+          "type": "string",
+          "example": "be1a183d-b301-4b83-b855-5eeffdd3526f"
+        }
+      }
+    },
+    "TransactionRequestAccountJsonV140": {
+      "required": [
+        "bank_id",
+        "account_id"
+      ],
+      "properties": {
+        "account_id": {
+          "type": "string",
+          "example": "8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        }
+      }
+    },
+    "TransactionRequestBodyAllTypes": {
+      "required": [
+        "value",
+        "description"
+      ],
+      "properties": {
+        "to_transfer_to_phone": {
+          "$ref": "#/definitions/TransactionRequestTransferToPhone"
+        },
+        "description": {
+          "type": "string",
+          "example": "String"
+        },
+        "to_transfer_to_atm": {
+          "$ref": "#/definitions/TransactionRequestTransferToAtm"
+        },
+        "to_counterparty": {
+          "$ref": "#/definitions/TransactionRequestCounterpartyId"
+        },
+        "to_sepa": {
+          "$ref": "#/definitions/TransactionRequestIban"
+        },
+        "to_transfer_to_account": {
+          "$ref": "#/definitions/TransactionRequestTransferToAccount"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoney"
+        },
+        "to_sandbox_tan": {
+          "$ref": "#/definitions/TransactionRequestAccount"
+        }
+      }
+    },
+    "TransactionRequestTransferToPhone": {
+      "required": [
+        "value",
+        "description",
+        "message",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "String"
+        },
+        "to": {
+          "$ref": "#/definitions/ToAccountTransferToPhone"
+        },
+        "from": {
+          "$ref": "#/definitions/FromAccountTransfer"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        }
+      }
+    },
+    "ToAccountTransferToPhone": {
+      "required": [
+        "mobile_phone_number"
+      ],
+      "properties": {
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "FromAccountTransfer": {
+      "required": [
+        "mobile_phone_number",
+        "nickname"
+      ],
+      "properties": {
+        "nickname": {
+          "type": "string",
+          "example": "String"
+        },
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "TransactionRequestTransferToAtm": {
+      "required": [
+        "value",
+        "description",
+        "message",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "String"
+        },
+        "to": {
+          "$ref": "#/definitions/ToAccountTransferToAtm"
+        },
+        "from": {
+          "$ref": "#/definitions/FromAccountTransfer"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        }
+      }
+    },
+    "ToAccountTransferToAtm": {
+      "required": [
+        "legal_name",
+        "date_of_birth",
+        "mobile_phone_number",
+        "kyc_document"
+      ],
+      "properties": {
+        "kyc_document": {
+          "$ref": "#/definitions/ToAccountTransferToAtmKycDocument"
+        },
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "example": "20181230"
+        },
+        "legal_name": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ToAccountTransferToAtmKycDocument": {
+      "required": [
+        "type",
+        "number"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "String"
+        },
+        "type": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "TransactionRequestCounterpartyId": {
+      "required": [
+        "counterparty_id"
+      ],
+      "properties": {
+        "counterparty_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "TransactionRequestIban": {
+      "required": [
+        "iban"
+      ],
+      "properties": {
+        "iban": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "TransactionRequestTransferToAccount": {
+      "required": [
+        "value",
+        "description",
+        "transfer_type",
+        "future_date",
+        "to"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "String"
+        },
+        "future_date": {
+          "type": "string",
+          "example": "20181230"
+        },
+        "to": {
+          "$ref": "#/definitions/ToAccountTransferToAccount"
+        },
+        "transfer_type": {
+          "type": "string",
+          "example": "String"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        }
+      }
+    },
+    "ToAccountTransferToAccount": {
+      "required": [
+        "name",
+        "bank_code",
+        "branch_number",
+        "account"
+      ],
+      "properties": {
+        "account": {
+          "$ref": "#/definitions/ToAccountTransferToAccountAccount"
+        },
+        "branch_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_code": {
+          "type": "string",
+          "example": "String"
+        },
+        "name": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ToAccountTransferToAccountAccount": {
+      "required": [
+        "number",
+        "iban"
+      ],
+      "properties": {
+        "iban": {
+          "type": "string",
+          "example": "String"
+        },
+        "number": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "AmountOfMoney": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "100"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "TransactionRequestAccount": {
+      "required": [
+        "bank_id",
+        "account_id"
+      ],
+      "properties": {
+        "account_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "TransactionRequestChargeJsonV200": {
+      "required": [
+        "summary",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "summary": {
+          "type": "string",
+          "example": "Rent the flat"
+        }
+      }
+    },
+    "TransactionRequestBodyJsonV200": {
+      "required": [
+        "to",
+        "value",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "this is for work"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "to": {
+          "$ref": "#/definitions/TransactionRequestAccountJsonV140"
+        }
+      }
+    },
+    "TransactionRequestBodySEPAJSON": {
+      "required": [
+        "value",
+        "to",
+        "description",
+        "charge_policy"
+      ],
+      "properties": {
+        "charge_policy": {
+          "type": "string",
+          "example": "SHARED"
+        },
+        "description": {
+          "type": "string",
+          "example": "This is a SEPA Transaction Request"
+        },
+        "to": {
+          "$ref": "#/definitions/IbanJson"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        }
+      }
+    },
+    "IbanJson": {
+      "required": [
+        "iban"
+      ],
+      "properties": {
+        "iban": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "ChallengeAnswerJSON": {
+      "required": [
+        "id",
+        "answer"
+      ],
+      "properties": {
+        "answer": {
+          "type": "string",
+          "example": "123"
+        },
+        "id": {
+          "type": "string",
+          "example": "This is challenge.id, you can get it from `Create Transaction Request.` response, only is useful if status \u003d\u003d`INITIATED` there."
+        }
+      }
+    },
+    "TransactionRequestWithChargeJson": {
+      "required": [
+        "id",
+        "type",
+        "from",
+        "details",
+        "transaction_ids",
+        "status",
+        "start_date",
+        "end_date",
+        "challenge",
+        "charge"
+      ],
+      "properties": {
+        "challenge": {
+          "$ref": "#/definitions/ChallengeJsonV140"
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "id": {
+          "type": "string",
+          "example": "82f92531-9c63-4246-abfc-96c20ec46188"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "status": {
+          "type": "string",
+          "example": "COMPLETED"
+        },
+        "from": {
+          "$ref": "#/definitions/TransactionRequestAccountJsonV140"
+        },
+        "details": {
+          "$ref": "#/definitions/TransactionRequestBody"
+        },
+        "charge": {
+          "$ref": "#/definitions/TransactionRequestChargeJsonV200"
+        },
+        "type": {
+          "type": "string",
+          "example": "SANDBOX_TAN"
+        },
+        "transaction_ids": {
+          "type": "string",
+          "example": "666666-9c63-4246-abfc-96c20ec46188"
+        }
+      }
+    },
+    "TransactionRequestBody": {
+      "required": [
+        "to",
+        "value",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "String"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoney"
+        },
+        "to": {
+          "$ref": "#/definitions/TransactionRequestAccount"
+        }
+      }
+    },
+    "TransactionRequestWithChargeJSONs210": {
+      "required": [
+        "transaction_requests_with_charges"
+      ],
+      "properties": {
+        "transaction_requests_with_charges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionRequestWithChargeJSON210"
+          }
+        }
+      }
+    },
+    "TransactionRequestTypesJSON": {
+      "required": [
+        "transaction_request_types"
+      ],
+      "properties": {
+        "transaction_request_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionRequestTypeJSONV210"
+          }
+        }
+      }
+    },
+    "TransactionRequestTypeJSONV210": {
+      "required": [
+        "transaction_request_type"
+      ],
+      "properties": {
+        "transaction_request_type": {
+          "type": "string",
+          "example": "SandboxTan"
+        }
+      }
+    }
+  }
+}

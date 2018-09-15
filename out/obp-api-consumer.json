@@ -1,0 +1,338 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-API-Consumer",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-api-consumer",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.1.0/management/consumers": {
+      "get": {
+        "tags": [
+          "API-Consumer"
+        ],
+        "summary": "Get Consumers",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the all Consumers.\u003c/p\u003e",
+        "operationId": "vv2_1_0-getConsumers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConsumersJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/consumers/{CONSUMER_ID}": {
+      "get": {
+        "tags": [
+          "API-Consumer"
+        ],
+        "summary": "Get Consumer",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the Consumer specified by CONSUMER_ID.\u003c/p\u003e",
+        "operationId": "vv2_1_0-getConsumer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConsumerJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "API-Consumer"
+        ],
+        "summary": "Enable or Disable Consumers",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eEnable/Disable a Consumer specified by CONSUMER_ID.\u003c/p\u003e",
+        "operationId": "vv2_1_0-enableDisableConsumers",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutEnabledJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PutEnabledJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/management/consumers/{CONSUMER_ID}/consumer/redirect_url": {
+      "put": {
+        "tags": [
+          "API-Consumer"
+        ],
+        "summary": "Update Consumer RedirectUrl",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdate an existing redirectUrl for a Consumer specified by CONSUMER_ID.\u003c/p\u003e\u003cp\u003eCONSUMER_ID can be obtained after you register the application. \u003c/p\u003e\u003cp\u003eOr use the endpoint \u0027Get Consumers\u0027 to get it \u003c/p\u003e",
+        "operationId": "vv2_1_0-updateConsumerRedirectUrl",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConsumerRedirectUrlJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ConsumerJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ConsumersJson": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConsumerJSON"
+          }
+        }
+      }
+    },
+    "ConsumerJSON": {
+      "required": [
+        "consumer_id",
+        "app_name",
+        "app_type",
+        "description",
+        "developer_email",
+        "redirect_url",
+        "created_by_user_id",
+        "created_by_user",
+        "enabled",
+        "created"
+      ],
+      "properties": {
+        "created_by_user_id": {
+          "type": "string",
+          "example": "123213"
+        },
+        "app_type": {
+          "type": "string",
+          "example": "Web"
+        },
+        "description": {
+          "type": "string",
+          "example": "Account Management"
+        },
+        "created_by_user": {
+          "$ref": "#/definitions/ResourceUserJSON"
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "redirect_url": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "developer_email": {
+          "type": "string",
+          "example": "contact@tesobe.com"
+        },
+        "consumer_id": {
+          "type": "integer",
+          "format": "int64",
+          "example": "1213"
+        },
+        "app_name": {
+          "type": "string",
+          "example": "SOFI"
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "ResourceUserJSON": {
+      "required": [
+        "user_id",
+        "email",
+        "provider_id",
+        "provider",
+        "username"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "obp"
+        },
+        "email": {
+          "type": "string",
+          "example": "contact@tesobe.com"
+        },
+        "username": {
+          "type": "string",
+          "example": "TESOBE"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "obp"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "PutEnabledJSON": {
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "example": "false"
+        }
+      }
+    },
+    "ConsumerRedirectUrlJSON": {
+      "required": [
+        "redirect_url"
+      ],
+      "properties": {
+        "redirect_url": {
+          "type": "string",
+          "example": "http://localhost:8888"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Data-Warehouse",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-data-warehouse",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v3.0.0/search/warehouse/INDEX": {
+      "post": {
+        "tags": [
+          "Data-Warehouse"
+        ],
+        "summary": "Data Warehouse Search",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eSearch the data warehouse and get row level results.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eCanSearchWarehouse entitlement is required. You can request the Role below.\u003c/p\u003e\u003cp\u003eElastic (search) is used in the background. See links below for syntax.\u003c/p\u003e\u003cp\u003eExamples of usage:\u003c/p\u003e\u003cp\u003ePOST /search/warehouse/THE_INDEX_YOU_WANT_TO_USE\u003c/p\u003e\u003cp\u003ePOST /search/warehouse/INDEX1,INDEX2\u003c/p\u003e\u003cp\u003ePOST /search/warehouse/ALL\u003c/p\u003e\u003cp\u003e{ Any valid elasticsearch query DSL in the body }\u003c/p\u003e\u003cp\u003e\u003ca href\u003d\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html\"\u003eElasticsearch query DSL\u003c/a\u003e\u003c/p\u003e\u003cp\u003e\u003ca href\u003d\"https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-request-body.html\"\u003eElastic simple query\u003c/a\u003e\u003c/p\u003e\u003cp\u003e\u003ca href\u003d\"https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-aggregations.html\"\u003eElastic aggregations\u003c/a\u003e\u003c/p\u003e",
+        "operationId": "vv3_0_0-dataWarehouseSearch",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ElasticSearchJSON"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/search/warehouse/statistics/FIELD": {
+      "post": {
+        "tags": [
+          "Data-Warehouse"
+        ],
+        "summary": "Data Warehouse Statistics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eSearch the data warehouse and get statistical aggregations over a warehouse field\u003c/p\u003e\u003cp\u003eDoes a stats aggregation over some numeric field:\u003c/p\u003e\u003cp\u003ehttps://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-stats-aggregation.html\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eCanSearchWarehouseStats Role is required. You can request this below.\u003c/p\u003e\u003cp\u003eElastic (search) is used in the background. See links below for syntax.\u003c/p\u003e\u003cp\u003eExamples of usage:\u003c/p\u003e\u003cp\u003ePOST /search/warehouse/statistics/INDEX/FIELD\u003c/p\u003e\u003cp\u003ePOST /search/warehouse/statistics/ALL/FIELD\u003c/p\u003e\u003cp\u003e{ Any valid elasticsearch query DSL in the body }\u003c/p\u003e\u003cp\u003e\u003ca href\u003d\"https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html\"\u003eElasticsearch query DSL\u003c/a\u003e\u003c/p\u003e\u003cp\u003e\u003ca href\u003d\"https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-request-body.html\"\u003eElastic simple query\u003c/a\u003e\u003c/p\u003e\u003cp\u003e\u003ca href\u003d\"https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-aggregations.html\"\u003eElastic aggregations\u003c/a\u003e\u003c/p\u003e",
+        "operationId": "vv3_0_0-dataWarehouseStatistics",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ElasticSearchJSON"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ElasticSearchJSON": {
+      "required": [
+        "metrics",
+        "warehouse"
+      ],
+      "properties": {
+        "warehouse": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WarehouseJSON"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricsJSON"
+          }
+        }
+      }
+    },
+    "WarehouseJSON": {
+      "required": [
+        "property",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "ElasticSearch"
+        },
+        "property": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "MetricsJSON": {
+      "required": [
+        "property",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "Mapper"
+        },
+        "property": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    }
+  }
+}

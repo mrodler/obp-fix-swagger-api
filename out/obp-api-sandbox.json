@@ -1,0 +1,165 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-API-Sandbox",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-api-sandbox",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.1.0/sandbox/data-import": {
+      "post": {
+        "tags": [
+          "API-Sandbox"
+        ],
+        "summary": "Create sandbox",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eImport bulk data into the sandbox (Authenticated access).\u003c/p\u003e\u003cp\u003eThis call can be used to create banks, users, accounts and transactions which are stored in the local RDBMS.\u003c/p\u003e\u003cp\u003eThe user needs to have CanCreateSandbox entitlement.\u003c/p\u003e\u003cp\u003eNote: This is a monolithic call. You could also use a combination of endpoints including create bank, create user, create account and create transaction request to create similar data.\u003c/p\u003e\u003cp\u003eAn example of an import set of data (json) can be found \u003ca href\u003d\"https://raw.githubusercontent.com/OpenBankProject/OBP-API/develop/src/main/scala/code/api/sandbox/example_data/2016-04-28/example_import.json\"\u003ehere\u003c/a\u003e Authentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-sandboxDataImport",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SandboxDataImport"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SandboxDataImport": {
+      "required": [
+        "banks",
+        "users",
+        "accounts",
+        "transactions",
+        "branches",
+        "atms",
+        "products",
+        "crm_events"
+      ],
+      "properties": {
+        "crm_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxCrmEventImport"
+          }
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxUserImport"
+          }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxProductImport"
+          }
+        },
+        "banks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxBankImport"
+          }
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxBranchImport"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxTransactionImport"
+          }
+        },
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxAccountImport"
+          }
+        },
+        "atms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SandboxAtmImport"
+          }
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    }
+  }
+}

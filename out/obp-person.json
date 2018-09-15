@@ -1,0 +1,416 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Person",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-person",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.4.0/banks/{BANK_ID}/customer/{CUSTOMER_ID}/messages": {
+      "post": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Add Customer Message.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a message for the customer specified by CUSTOMER_ID\u003c/p\u003e",
+        "operationId": "vv1_4_0-addCustomerMessage",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddCustomerMessageJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/customers": {
+      "post": {
+        "tags": [
+          "Person"
+        ],
+        "summary": "Create Customer.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a customer linked to the user specified by user_id The Customer resource stores the customer number, legal name, email, phone number, their date of birth, relationship status, education attained, a url for a profile image, KYC status etc. Dates need to be in the format 2013-01-21T23:08:00Z\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eCanCreateCustomer and CanCreateUserCustomerLink OR CanCreateCustomerAtAnyBank and CanCreateUserCustomerLinkAtAnyBank\u003c/p\u003e",
+        "operationId": "vv2_1_0-createCustomer",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostCustomerJsonV210"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CustomerJsonV210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AddCustomerMessageJson": {
+      "required": [
+        "message",
+        "from_department",
+        "from_person"
+      ],
+      "properties": {
+        "from_person": {
+          "type": "string",
+          "example": "String"
+        },
+        "from_department": {
+          "type": "string",
+          "example": "String"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "PostCustomerJsonV210": {
+      "required": [
+        "user_id",
+        "customer_number",
+        "legal_name",
+        "mobile_phone_number",
+        "email",
+        "face_image",
+        "date_of_birth",
+        "relationship_status",
+        "dependants",
+        "dob_of_dependants",
+        "credit_rating",
+        "credit_limit",
+        "highest_education_attained",
+        "employment_status",
+        "kyc_status",
+        "last_ok_date"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "person@example.com"
+        },
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "+44 07972 444 876"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "new customer number 687687678"
+        },
+        "highest_education_attained": {
+          "type": "string",
+          "example": "Bachelor’s Degree"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user_id to attach this customer to e.g. 123213"
+        },
+        "dob_of_dependants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "credit_rating": {
+          "$ref": "#/definitions/CustomerCreditRatingJSON"
+        },
+        "last_ok_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "employment_status": {
+          "type": "string",
+          "example": "Employed"
+        },
+        "legal_name": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "credit_limit": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "face_image": {
+          "$ref": "#/definitions/CustomerFaceImageJson"
+        },
+        "dependants": {
+          "type": "integer",
+          "format": "int32",
+          "example": "5"
+        },
+        "relationship_status": {
+          "type": "string",
+          "example": "Single"
+        },
+        "kyc_status": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "CustomerCreditRatingJSON": {
+      "required": [
+        "rating",
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "rating": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "CustomerFaceImageJson": {
+      "required": [
+        "url",
+        "date"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "url": {
+          "type": "string",
+          "example": "www.openbankproject"
+        }
+      }
+    },
+    "CustomerJsonV210": {
+      "required": [
+        "bank_id",
+        "customer_id",
+        "customer_number",
+        "legal_name",
+        "mobile_phone_number",
+        "email",
+        "face_image",
+        "date_of_birth",
+        "relationship_status",
+        "dependants",
+        "dob_of_dependants",
+        "highest_education_attained",
+        "employment_status",
+        "kyc_status",
+        "last_ok_date"
+      ],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "email": {
+          "type": "string",
+          "example": "contact@tesobe.com"
+        },
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "123"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "123"
+        },
+        "highest_education_attained": {
+          "type": "string",
+          "example": "123"
+        },
+        "dob_of_dependants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bankid1234"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "credit_rating": {
+          "$ref": "#/definitions/CustomerCreditRatingJSON"
+        },
+        "last_ok_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "employment_status": {
+          "type": "string",
+          "example": "123"
+        },
+        "legal_name": {
+          "type": "string",
+          "example": "legal_name"
+        },
+        "credit_limit": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "face_image": {
+          "$ref": "#/definitions/CustomerFaceImageJson"
+        },
+        "dependants": {
+          "type": "integer",
+          "format": "int32",
+          "example": "123"
+        },
+        "relationship_status": {
+          "type": "string",
+          "example": "123"
+        },
+        "kyc_status": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Customer-Message",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-customer-message",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.4.0/banks/{BANK_ID}/customer/{CUSTOMER_ID}/messages": {
+      "post": {
+        "tags": [
+          "Customer-Message"
+        ],
+        "summary": "Add Customer Message.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a message for the customer specified by CUSTOMER_ID\u003c/p\u003e",
+        "operationId": "vv1_4_0-addCustomerMessage",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddCustomerMessageJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.4.0/banks/{BANK_ID}/customer/messages": {
+      "get": {
+        "tags": [
+          "Customer-Message"
+        ],
+        "summary": "Get Customer Messages (current)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet messages for the logged in customer Messages sent to the currently authenticated user.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required.\u003c/p\u003e",
+        "operationId": "vv1_4_0-getCustomerMessages",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CustomerMessagesJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AddCustomerMessageJson": {
+      "required": [
+        "message",
+        "from_department",
+        "from_person"
+      ],
+      "properties": {
+        "from_person": {
+          "type": "string",
+          "example": "String"
+        },
+        "from_department": {
+          "type": "string",
+          "example": "String"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "CustomerMessagesJson": {
+      "required": [
+        "messages"
+      ],
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomerMessageJson"
+          }
+        }
+      }
+    },
+    "CustomerMessageJson": {
+      "required": [
+        "id",
+        "date",
+        "message",
+        "from_department",
+        "from_person"
+      ],
+      "properties": {
+        "from_person": {
+          "type": "string",
+          "example": "String"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "from_department": {
+          "type": "string",
+          "example": "String"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    }
+  }
+}

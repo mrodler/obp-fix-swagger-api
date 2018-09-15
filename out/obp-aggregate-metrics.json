@@ -1,0 +1,112 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Aggregate-Metrics",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-aggregate-metrics",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v3.0.0/management/aggregate-metrics": {
+      "get": {
+        "tags": [
+          "Aggregate-Metrics"
+        ],
+        "summary": "Get Aggregate Metrics",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns aggregate metrics on api usage eg. total count, response time (in ms), etc.\u003c/p\u003e\u003cp\u003eShould be able to filter on the following fields\u003c/p\u003e\u003cp\u003eeg: /management/aggregate-metrics?from_date\u003d2017-09-19T02:31:05.000Z\u0026amp;to_date\u003d2017-09-19T02:31:05.000Z\u0026amp;consumer_id\u003d5 \u0026amp;user_id\u003d66214b8e-259e-44ad-8868-3eb47be70646\u0026amp;implemented_by_partial_function\u003dgetTransactionsForBankAccount \u0026amp;implemented_in_version\u003dv3.0.0\u0026amp;url\u003d/obp/v3.0.0/banks/gh.29.uk/accounts/8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0/owner/transactions \u0026amp;verb\u003dGET\u0026amp;anon\u003dfalse\u0026amp;app_name\u003dMapperPostman \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e1 from_date (defaults to the day before the current date): eg:from_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e2 to_date (defaults to the current date) eg:to_date\u003d2017-09-19T02:31:05.000Z\u003c/p\u003e\u003cp\u003e3 consumer_id (if null ignore)\u003c/p\u003e\u003cp\u003e4 user_id (if null ignore)\u003c/p\u003e\u003cp\u003e5 anon (if null ignore) only support two value : true (return where user_id is null.) or false (return where user_id is not null.)\u003c/p\u003e\u003cp\u003e6 url (if null ignore), note: can not contain \u0027\u0026amp;\u0027.\u003c/p\u003e\u003cp\u003e7 app_name (if null ignore)\u003c/p\u003e\u003cp\u003e8 implemented_by_partial_function (if null ignore),\u003c/p\u003e\u003cp\u003e9 implemented_in_version (if null ignore)\u003c/p\u003e\u003cp\u003e10 verb (if null ignore)\u003c/p\u003e\u003cp\u003e11 correlation_id (if null ignore)\u003c/p\u003e\u003cp\u003e12 duration (if null ignore) non digit chars will be silently omitted\u003c/p\u003e\u003cp\u003e13 exclude_app_names (if null ignore).eg: \u0026amp;exclude_app_names\u003dAPI-EXPLORER,API-Manager,SOFI,null\u003c/p\u003e\u003cp\u003e14 exclude_url_pattern (if null ignore).you can design you own SQL NOT LIKE pattern. eg: \u0026amp;exclude_url_pattern\u003d%management/metrics%\u003c/p\u003e\u003cp\u003e15 exclude_implemented_by_partial_functions (if null ignore).eg: \u0026amp;exclude_implemented_by_partial_functions\u003dgetMetrics,getConnectorMetrics,getAggregateMetrics\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAggregateMetrics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AggregateMetricJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AggregateMetricJSON": {
+      "required": [
+        "count",
+        "average_response_time",
+        "minimum_response_time",
+        "maximum_response_time"
+      ],
+      "properties": {
+        "maximum_response_time": {
+          "type": "number",
+          "format": "double",
+          "example": "9039.0"
+        },
+        "minimum_response_time": {
+          "type": "number",
+          "format": "double",
+          "example": "1.0"
+        },
+        "average_response_time": {
+          "type": "number",
+          "format": "double",
+          "example": "65.21"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32",
+          "example": "7076"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    }
+  }
+}

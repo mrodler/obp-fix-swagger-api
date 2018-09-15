@@ -1,0 +1,286 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-PrivateData",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-privatedata",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/banks/{BANK_ID}/accounts": {
+      "get": {
+        "tags": [
+          "PrivateData"
+        ],
+        "summary": "Get Accounts at Bank.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the list of accounts at BANK_ID that the user has access to. For each account the API returns the account ID and the views available to the user.. Each account must have at least one private View.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getPrivateAccountsAtOneBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BasicAccountsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/my/accounts": {
+      "get": {
+        "tags": [
+          "PrivateData"
+        ],
+        "summary": "Get Accounts at all Banks (private)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the list of accounts containing private views for the user. Each account lists the views available to the user.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-corePrivateAccountsAllBanks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CoreAccountsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BasicAccountsJSON": {
+      "required": [
+        "accounts"
+      ],
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BasicAccountJSON"
+          }
+        }
+      }
+    },
+    "BasicAccountJSON": {
+      "required": [
+        "id",
+        "label",
+        "bank_id",
+        "views_available"
+      ],
+      "properties": {
+        "views_available": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BasicViewJson"
+          }
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "label": {
+          "type": "string",
+          "example": "NoneLabel"
+        },
+        "id": {
+          "type": "string",
+          "example": "8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0"
+        }
+      }
+    },
+    "BasicViewJson": {
+      "required": [
+        "id",
+        "short_name",
+        "is_public"
+      ],
+      "properties": {
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "HHH"
+        },
+        "id": {
+          "type": "string",
+          "example": "1"
+        }
+      }
+    },
+    "ErrorBankNotFound": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-30001: Bank not found. Please specify a valid value for BANK_ID."
+        }
+      }
+    },
+    "CoreAccountsJsonV300": {
+      "required": [
+        "accounts"
+      ],
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoreAccountJson"
+          }
+        }
+      }
+    },
+    "CoreAccountJson": {
+      "required": [
+        "id",
+        "label",
+        "bank_id",
+        "account_type",
+        "account_routings",
+        "views"
+      ],
+      "properties": {
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "label": {
+          "type": "string",
+          "example": "String"
+        },
+        "account_type": {
+          "type": "string",
+          "example": "330"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "views": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewBasic"
+          }
+        }
+      }
+    },
+    "AccountRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "4930396"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "AccountNumber"
+        }
+      }
+    },
+    "ViewBasic": {
+      "required": [
+        "id",
+        "short_name",
+        "description",
+        "is_public"
+      ],
+      "properties": {
+        "is_public": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "description": {
+          "type": "string",
+          "example": "description"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "short_name"
+        },
+        "id": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    }
+  }
+}

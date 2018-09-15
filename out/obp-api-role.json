@@ -1,0 +1,835 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-API-Role",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-api-role",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/entitlements": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get all Entitlements",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eLogin is required.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getAllEntitlements",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/users/{USER_ID}/entitlement/{ENTITLEMENT_ID}": {
+      "delete": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Delete Entitlement",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete Entitlement specified by ENTITLEMENT_ID for an user specified by USER_ID\u003c/p\u003e\u003cp\u003eAuthentication is required and the user needs to be a Super Admin. Super Admins are listed in the Props file.\u003c/p\u003e",
+        "operationId": "vv2_0_0-deleteEntitlement",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ENTITLEMENT_ID",
+            "description": "The entitblement id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/users/{USER_ID}/entitlements": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Entitlements for User",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getEntitlements",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Add Entitlement for a User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Entitlement. Grant Role to User.\u003c/p\u003e\u003cp\u003eEntitlements are used to grant System or Bank level roles to Users. (For Account level privileges, see Views)\u003c/p\u003e\u003cp\u003eFor a System level Role (.e.g CanGetAnyUser), set bank_id to an empty string i.e. \"bank_id\":\"\"\u003c/p\u003e\u003cp\u003eFor a Bank level Role (e.g. CanCreateAccount), set bank_id to a valid value e.g. \"bank_id\":\"my-bank-id\"\u003c/p\u003e\u003cp\u003eAuthentication is required and the user needs to be a Super Admin. Super Admins are listed in the Props file.\u003c/p\u003e",
+        "operationId": "vv2_0_0-addEntitlement",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateEntitlementJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/users/{USER_ID}/entitlements": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Entitlements for User at Bank.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlements specified by BANK_ID and USER_ID\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-getEntitlementsByBankAndUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/roles": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Roles",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns all available roles\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-getRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AvailableRolesJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/consumers/{CONSUMER_ID}/scope/SCOPE_ID": {
+      "delete": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Delete Consumer Scope",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete Consumer Scope specified by SCOPE_ID for an consumer specified by CONSUMER_ID\u003c/p\u003e\u003cp\u003eAuthentication is required and the user needs to be a Super Admin. Super Admins are listed in the Props file.\u003c/p\u003e",
+        "operationId": "vv3_0_0-deleteScope",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/consumers/{CONSUMER_ID}/scopes": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Scopes for Consumer",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet all the scopes for an consumer specified by CONSUMER_ID\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getScopes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ScopeJsons"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Add Scope for a Consumer.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Scope. Grant Role to Consumer.\u003c/p\u003e\u003cp\u003eScopes are used to grant System or Bank level roles to the Consumer (App). (For Account level privileges, see Views)\u003c/p\u003e\u003cp\u003eFor a System level Role (.e.g CanGetAnyUser), set bank_id to an empty string i.e. \"bank_id\":\"\"\u003c/p\u003e\u003cp\u003eFor a Bank level Role (e.g. CanCreateAccount), set bank_id to a valid value e.g. \"bank_id\":\"my-bank-id\"\u003c/p\u003e",
+        "operationId": "vv3_0_0-addScope",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateScopeJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ScopeJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/entitlement-requests": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get all Entitlement Requests",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet all Entitlement Requests\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAllEntitlementRequests",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Add Entitlement Request for a Logged User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Entitlement Request.\u003c/p\u003e\u003cp\u003eAny logged in User can use this endpoint to request an Entitlement\u003c/p\u003e\u003cp\u003eEntitlements are used to grant System or Bank level roles to Users. (For Account level privileges, see Views)\u003c/p\u003e\u003cp\u003eFor a System level Role (.e.g CanGetAnyUser), set bank_id to an empty string i.e. \"bank_id\":\"\"\u003c/p\u003e\u003cp\u003eFor a Bank level Role (e.g. CanCreateAccount), set bank_id to a valid value e.g. \"bank_id\":\"my-bank-id\"\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-addEntitlementRequest",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateEntitlementJSON"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/entitlement-requests/ENTITLEMENT_REQUEST_ID": {
+      "delete": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Delete Entitlement Request",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete the Entitlement Request specified by ENTITLEMENT_REQUEST_ID for a user specified by USER_ID\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-deleteEntitlementRequest",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/my/entitlement-requests": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Entitlement Requests for the current User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlement Requests for the current User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getEntitlementRequestsForCurrentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/my/entitlements": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Entitlements for the current User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlements for the current User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getEntitlementsForCurrentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/users/{USER_ID}/entitlement-requests": {
+      "get": {
+        "tags": [
+          "API-Role"
+        ],
+        "summary": "Get Entitlement Requests for a User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlement Requests for a User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getEntitlementRequests",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EntitlementJSONs": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitlementJSON"
+          }
+        }
+      }
+    },
+    "EntitlementJSON": {
+      "required": [
+        "entitlement_id",
+        "role_name",
+        "bank_id"
+      ],
+      "properties": {
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanQueryOtherUser"
+        },
+        "entitlement_id": {
+          "type": "string",
+          "example": "6fb17583-1e49-4435-bb74-a14fe0996723"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "CreateEntitlementJSON": {
+      "required": [
+        "bank_id",
+        "role_name"
+      ],
+      "properties": {
+        "role_name": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        }
+      }
+    },
+    "AvailableRolesJSON": {
+      "required": [
+        "roles"
+      ],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AvailableRoleJSON"
+          }
+        }
+      }
+    },
+    "AvailableRoleJSON": {
+      "required": [
+        "role",
+        "requires_bank_id"
+      ],
+      "properties": {
+        "requires_bank_id": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "role": {
+          "type": "string",
+          "example": "CanCreateBranch"
+        }
+      }
+    },
+    "ScopeJsons": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScopeJson"
+          }
+        }
+      }
+    },
+    "ScopeJson": {
+      "required": [
+        "scope_id",
+        "role_name",
+        "bank_id"
+      ],
+      "properties": {
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanGetEntitlementsForAnyUserAtOneBank"
+        },
+        "scope_id": {
+          "type": "string",
+          "example": "88625da4-a671-435e-9d24-e5b6e5cc404f"
+        }
+      }
+    },
+    "CreateScopeJson": {
+      "required": [
+        "bank_id",
+        "role_name"
+      ],
+      "properties": {
+        "role_name": {
+          "type": "string",
+          "example": "CanGetEntitlementsForAnyUserAtOneBank"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        }
+      }
+    },
+    "EntitlementRequestsJSON": {
+      "required": [
+        "entitlement_requests"
+      ],
+      "properties": {
+        "entitlement_requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitlementRequestJSON"
+          }
+        }
+      }
+    },
+    "EntitlementRequestJSON": {
+      "required": [
+        "entitlement_request_id",
+        "user",
+        "role_name",
+        "bank_id",
+        "created"
+      ],
+      "properties": {
+        "entitlement_request_id": {
+          "type": "string",
+          "example": "6fb17583-1e49-4435-bb74-a14fe0996723"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanQueryOtherUser"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "user": {
+          "$ref": "#/definitions/UserJsonV200"
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "UserJsonV200": {
+      "required": [
+        "user_id",
+        "email",
+        "provider_id",
+        "provider",
+        "username",
+        "entitlements"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "email": {
+          "type": "string",
+          "example": "robert.x.0.gh@example.com"
+        },
+        "username": {
+          "type": "string",
+          "example": "robert.x.0.gh"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "entitlements": {
+          "$ref": "#/definitions/EntitlementJSONs"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-API-Documentation",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-api-documentation",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.4.0/resource-docs/{API_VERSION}/obp": {
+      "get": {
+        "tags": [
+          "API-Documentation"
+        ],
+        "summary": "Get Resource Docs.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet documentation about the RESTful resources on this server including example bodies for POST and PUT requests.\u003c/p\u003e\u003cp\u003eThis is the native data format used to document OBP endpoints. Each endpoint has a Resource Doc (a Scala case class) defined in the source code.\u003c/p\u003e\u003cp\u003eThis endpoint is used by OBP API Explorer to display and work with the API documentation.\u003c/p\u003e\u003cp\u003eMost (but not all) fields are also available in swagger format. (The Swagger endpoint is built from Resource Docs.)\u003c/p\u003e\u003cp\u003eAPI_VERSION is the version you want documentation about e.g. v3.0.0\u003c/p\u003e\u003cp\u003eYou may filter this endpoint with tags parameter e.g. ?tags\u003dAccount,Bank\u003c/p\u003e\u003cp\u003eYou may filter this endpoint with functions parameter e.g. ?functions\u003denableDisableConsumers,getConnectorMetrics\u003c/p\u003e\u003cp\u003eFor possible function values, see implemented_by.function in the JSON returned by this endpoint or the OBP source code or the footer of the API Explorer which produces a comma separated list of functions that reflect the server or filtering by API Explorer based on tags etc.\u003c/p\u003e\u003cul\u003e\u003cli\u003e operation_id is concatenation of \"v\", version and function and should be unique (used for DOM element IDs etc. maybe used to link to source code) \u003c/li\u003e\u003cli\u003e version references the version that the API call is defined in.\u003c/li\u003e\u003cli\u003e function is the (scala) partial function that implements this endpoint. It is unique per version of the API.\u003c/li\u003e\u003cli\u003e request_url is empty for the root call, else the path.\u003c/li\u003e\u003cli\u003e summary is a short description inline with the swagger terminology. \u003c/li\u003e\u003cli\u003e description may contain html markup (generated from markdown on the server).\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv1_4_0-getResourceDocsObp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "API_VERSION",
+            "description": "eg:v2.2.0, v3.0.0",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.4.0/resource-docs/{API_VERSION}/swagger": {
+      "get": {
+        "tags": [
+          "API-Documentation"
+        ],
+        "summary": "Get Swagger documentation",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns documentation about the RESTful resources on this server in Swagger format.\u003c/p\u003e\u003cp\u003eAPI_VERSION is the version you want documentation about e.g. v3.0.0\u003c/p\u003e\u003cp\u003eYou may filter this endpoint using the \u0027tags\u0027 url parameter e.g. ?tags\u003dAccount,Bank\u003c/p\u003e\u003cp\u003e(All endpoints are given one or more tags which for used in grouping)\u003c/p\u003e\u003cp\u003eYou may filter this endpoint using the \u0027functions\u0027 url parameter e.g. ?functions\u003denableDisableConsumers,getConnectorMetrics\u003c/p\u003e\u003cp\u003e(Each endpoint is implemented in the OBP Scala code by a \u0027function\u0027)\u003c/p\u003e\u003cp\u003eSee the Resource Doc endpoint for more information.\u003c/p\u003e",
+        "operationId": "vv1_4_0-getResourceDocsSwagger",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "API_VERSION",
+            "description": "eg:v2.2.0, v3.0.0",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/message-docs/CONNECTOR": {
+      "get": {
+        "tags": [
+          "API-Documentation"
+        ],
+        "summary": "Get Message Docs",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eThese message docs provide example messages sent by OBP to the (Kafka) message queue for processing by the Core Banking / Payment system Adapter - together with an example expected response and possible error codes.  Integrators can use these messages to build Adapters that provide core banking services to OBP.\u003c/p\u003e\u003cp\u003e\u003ccode\u003eCONNECTOR\u003c/code\u003e: kafka_vJuneYellow2017, kafka_vJune2017 , kafka_vMar2017 or ... \u003c/p\u003e",
+        "operationId": "vv2_2_0-getMessageDocs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MessageDocsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/api/glossary": {
+      "get": {
+        "tags": [
+          "API-Documentation"
+        ],
+        "summary": "Get API Glossary",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the glossary of the API\u003c/p\u003e",
+        "operationId": "vv3_0_0-glossary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GlossaryItemsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "ErrorUnknownError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-50000: Unknown Error."
+        }
+      }
+    },
+    "MessageDocsJson": {
+      "required": [
+        "messageDocs"
+      ],
+      "properties": {
+        "messageDocs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageDocJson"
+          }
+        }
+      }
+    },
+    "MessageDocJson": {
+      "required": [
+        "process",
+        "message_format",
+        "description",
+        "example_outbound_message",
+        "example_inbound_message"
+      ],
+      "properties": {
+        "outboundAvroSchema": {
+          "type": "string",
+          "example": "This is a json String."
+        },
+        "example_inbound_message": {
+          "type": "string",
+          "example": "This is a json String."
+        },
+        "inboundAvroSchema": {
+          "type": "string",
+          "example": "This is a json String."
+        },
+        "description": {
+          "type": "string",
+          "example": "get Banks"
+        },
+        "process": {
+          "type": "string",
+          "example": "getBanks"
+        },
+        "message_format": {
+          "type": "string",
+          "example": "KafkaV2017"
+        },
+        "example_outbound_message": {
+          "type": "string",
+          "example": "This is a json String."
+        }
+      }
+    },
+    "GlossaryItemsJsonV300": {
+      "required": [
+        "glossary_items"
+      ],
+      "properties": {
+        "glossary_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GlossaryItemJsonV300"
+          }
+        }
+      }
+    }
+  }
+}

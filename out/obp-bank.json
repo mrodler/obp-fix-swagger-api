@@ -1,0 +1,1455 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Bank",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-bank",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/banks/{BANK_ID}/transaction-types": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Transaction Types at Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Transaction Types for the bank specified by BANK_ID:\u003c/p\u003e\u003cp\u003eLists the possible Transaction Types available at the bank (as opposed to Transaction Request Types which are the possible ways Transactions can be created by this API Server).\u003c/p\u003e\u003cul\u003e  \u003cli\u003eid : Unique transaction type id across the API instance. SHOULD be a UUID. MUST be unique.\u003c/li\u003e  \u003cli\u003ebank_id : The bank that supports this TransactionType\u003c/li\u003e  \u003cli\u003eshort_code : A short code (SHOULD have no-spaces) which MUST be unique across the bank. May be stored with Transactions to link here\u003c/li\u003e  \u003cli\u003esummary : A succinct summary\u003c/li\u003e  \u003cli\u003edescription : A longer description\u003c/li\u003e  \u003cli\u003echarge : The charge to the customer for each one of these\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv2_0_0-getTransactionTypes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionTypesJsonV200"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/transaction-request-types": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get supported Transaction Request Types",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the list of the Transaction Request Types supported by the bank.\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv2_1_0-getTransactionRequestTypesSupportedByBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionRequestTypesJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/transaction-types": {
+      "put": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Create Transaction Type at bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Transaction Types for the bank specified by BANK_ID:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eid : Unique transaction type id across the API instance. SHOULD be a UUID. MUST be unique.\u003c/li\u003e  \u003cli\u003ebank_id : The bank that supports this TransactionType\u003c/li\u003e  \u003cli\u003eshort_code : A short code (SHOULD have no-spaces) which MUST be unique across the bank. May be stored with Transactions to link here\u003c/li\u003e  \u003cli\u003esummary : A succinct summary\u003c/li\u003e  \u003cli\u003edescription : A longer description\u003c/li\u003e  \u003cli\u003echarge : The charge to the customer for each one of these\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-createTransactionType",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionTypeJsonV200"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionType"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/banks": {
+      "post": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Create Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate a new bank (Authenticated access). Authentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_2_0-createBank",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BankJSONV220"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BankJSONV220"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidJsonFormat"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Banks",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet banks on this API instance Returns a list of banks supported on this server:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eID used as parameter in URLs\u003c/li\u003e  \u003cli\u003eShort and full name of bank\u003c/li\u003e  \u003cli\u003eLogo URL\u003c/li\u003e  \u003cli\u003eWebsite\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv3_0_0-getBanks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BanksJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the bank specified by BANK_ID Returns information about a single bank specified by BANK_ID including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eShort and full name of bank\u003c/li\u003e  \u003cli\u003eLogo URL\u003c/li\u003e  \u003cli\u003eWebsite\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv3_0_0-bankById",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BankJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/branches": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Branches for a Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about branches for a single bank specified by BANK_ID including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eName\u003c/li\u003e  \u003cli\u003eAddress\u003c/li\u003e  \u003cli\u003eGeo Location\u003c/li\u003e  \u003cli\u003eLicense the data under this endpoint is released under\u003c/li\u003e  \u003cli\u003eStructured opening hours\u003c/li\u003e  \u003cli\u003eAccessible flag\u003c/li\u003e  \u003cli\u003eBranch Type\u003c/li\u003e  \u003cli\u003eMore Info\u003c/li\u003e\u003c/ul\u003e\u003cp\u003ePagination:\u003c/p\u003e\u003cp\u003eBy default, 50 records are returned.\u003c/p\u003e\u003cp\u003eYou can use the url query parameters \u003cem\u003elimit\u003c/em\u003e and \u003cem\u003eoffset\u003c/em\u003e for pagination\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv3_0_0-getBranches",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BranchesJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/branches/{BRANCH_ID}": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Branch",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about a single Branch specified by BANK_ID and BRANCH_ID including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eName\u003c/li\u003e  \u003cli\u003eAddress\u003c/li\u003e  \u003cli\u003eGeo Location\u003c/li\u003e  \u003cli\u003eLicense the data under this endpoint is released under.\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv3_0_0-getBranch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BRANCH_ID",
+            "description": "The branch id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BranchJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/checkbook/orders": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "get Checkbook orders",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet all checkbook orders\u003c/p\u003e",
+        "operationId": "vv3_1_0-getCheckbookOrders",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CheckbookOrdersJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/credit_cards/orders": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get status of Credit Card order ",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet status of Credit Card orders Get all orders\u003c/p\u003e",
+        "operationId": "vv3_1_0-getStatusOfCreditCardOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreditCardOrderStatusResponseJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/credit_limit/requests": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Credit Limit Order Requests ",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Credit Limit Order Requests \u003c/p\u003e",
+        "operationId": "vv3_1_0-getCreditLimitOrderRequests",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreditLimitOrderJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Create Credit Limit Order Request",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate credit limit order request\u003c/p\u003e",
+        "operationId": "vv3_1_0-createCreditLimitOrderRequest",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreditLimitOrderRequestJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreditLimitOrderResponseJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/credit_limit/requests/REQUEST_ID": {
+      "get": {
+        "tags": [
+          "Bank"
+        ],
+        "summary": "Get Creadit Limit Order Request By Request Id",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Creadit Limit Order Request By Request Id\u003c/p\u003e",
+        "operationId": "vv3_1_0-getCreditLimitOrderRequestByRequestId",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreditLimitOrderJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TransactionTypesJsonV200": {
+      "required": [
+        "transaction_types"
+      ],
+      "properties": {
+        "transaction_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionTypeJsonV200"
+          }
+        }
+      }
+    },
+    "TransactionTypeJsonV200": {
+      "required": [
+        "id",
+        "bank_id",
+        "short_code",
+        "summary",
+        "description",
+        "charge"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "short_code": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "id": {
+          "$ref": "#/definitions/TransactionTypeId"
+        },
+        "charge": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "summary": {
+          "type": "string",
+          "example": "PlaceholderString"
+        }
+      }
+    },
+    "TransactionTypeId": {
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "ErrorBankNotFound": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-30001: Bank not found. Please specify a valid value for BANK_ID."
+        }
+      }
+    },
+    "TransactionRequestTypesJSON": {
+      "required": [
+        "transaction_request_types"
+      ],
+      "properties": {
+        "transaction_request_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionRequestTypeJSONV210"
+          }
+        }
+      }
+    },
+    "TransactionRequestTypeJSONV210": {
+      "required": [
+        "transaction_request_type"
+      ],
+      "properties": {
+        "transaction_request_type": {
+          "type": "string",
+          "example": "SandboxTan"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "TransactionType": {
+      "required": [
+        "id",
+        "bankId",
+        "shortCode",
+        "summary",
+        "description",
+        "charge"
+      ],
+      "properties": {
+        "shortCode": {
+          "type": "string",
+          "example": "80080"
+        },
+        "description": {
+          "type": "string",
+          "example": "This is the sandbox mode, charging litter money."
+        },
+        "id": {
+          "$ref": "#/definitions/TransactionTypeId"
+        },
+        "charge": {
+          "$ref": "#/definitions/AmountOfMoney"
+        },
+        "bankId": {
+          "$ref": "#/definitions/BankId"
+        },
+        "summary": {
+          "type": "string",
+          "example": "SANSANDBOX_TAN"
+        }
+      }
+    },
+    "AmountOfMoney": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "100"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "BankId": {
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "gh.uk.9j"
+        }
+      }
+    },
+    "BankJSONV220": {
+      "required": [
+        "id",
+        "full_name",
+        "short_name",
+        "logo_url",
+        "website_url",
+        "swift_bic",
+        "national_identifier",
+        "bank_routing"
+      ],
+      "properties": {
+        "national_identifier": {
+          "type": "string",
+          "example": "UK97ZZZ1234567890"
+        },
+        "full_name": {
+          "type": "string",
+          "example": "uk"
+        },
+        "swift_bic": {
+          "type": "string",
+          "example": "IIIGGB22"
+        },
+        "logo_url": {
+          "type": "string",
+          "example": "https://static.openbankproject.com/images/sandbox/bank_x.png"
+        },
+        "id": {
+          "type": "string",
+          "example": "gh.29.uk.x"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "uk"
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        },
+        "website_url": {
+          "type": "string",
+          "example": "https://www.example.com"
+        }
+      }
+    },
+    "BankRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "Bank_ID"
+        }
+      }
+    },
+    "ErrorInvalidJsonFormat": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10001: Incorrect json format."
+        }
+      }
+    },
+    "BanksJSON": {
+      "required": [
+        "banks"
+      ],
+      "properties": {
+        "banks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BankJSON"
+          }
+        }
+      }
+    },
+    "BankJSON": {
+      "required": [
+        "id",
+        "short_name",
+        "full_name",
+        "logo",
+        "website",
+        "bank_routing"
+      ],
+      "properties": {
+        "website": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "full_name": {
+          "type": "string",
+          "example": "full_name"
+        },
+        "logo": {
+          "type": "string",
+          "example": "logo"
+        },
+        "id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "short_name "
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        }
+      }
+    },
+    "ErrorUnknownError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-50000: Unknown Error."
+        }
+      }
+    },
+    "BranchesJsonV300": {
+      "required": [
+        "branches"
+      ],
+      "properties": {
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchJsonV300"
+          }
+        }
+      }
+    },
+    "BranchJsonV300": {
+      "required": [
+        "id",
+        "bank_id",
+        "name",
+        "address",
+        "location",
+        "meta",
+        "lobby",
+        "drive_up",
+        "branch_routing",
+        "is_accessible",
+        "accessibleFeatures",
+        "branch_type",
+        "more_info",
+        "phone_number"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Branch by the Lake"
+        },
+        "phone_number": {
+          "type": "string",
+          "example": "+381631954907"
+        },
+        "location": {
+          "$ref": "#/definitions/LocationJsonV140"
+        },
+        "branch_type": {
+          "type": "string",
+          "example": "Full service store"
+        },
+        "branch_routing": {
+          "$ref": "#/definitions/BranchRoutingJsonV141"
+        },
+        "drive_up": {
+          "$ref": "#/definitions/DriveUpJsonV330"
+        },
+        "more_info": {
+          "type": "string",
+          "example": "short walk to the lake from here"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bank-id-123"
+        },
+        "id": {
+          "type": "string",
+          "example": "branch-id-123"
+        },
+        "meta": {
+          "$ref": "#/definitions/MetaJsonV140"
+        },
+        "lobby": {
+          "$ref": "#/definitions/LobbyJsonV330"
+        },
+        "accessibleFeatures": {
+          "type": "string",
+          "example": "wheelchair, atm usuable by the visually impaired"
+        },
+        "address": {
+          "$ref": "#/definitions/AddressJsonV300"
+        },
+        "is_accessible": {
+          "type": "string",
+          "example": "true"
+        }
+      }
+    },
+    "LocationJsonV140": {
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "11.45"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "11.45"
+        }
+      }
+    },
+    "BranchRoutingJsonV141": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "678"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "BranchNumber"
+        }
+      }
+    },
+    "DriveUpJsonV330": {
+      "required": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "properties": {
+        "sunday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "tuesday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "wednesday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "monday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "friday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "thursday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "saturday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        }
+      }
+    },
+    "OpeningTimesV300": {
+      "required": [
+        "opening_time",
+        "closing_time"
+      ],
+      "properties": {
+        "closing_time": {
+          "type": "string",
+          "example": "18:00"
+        },
+        "opening_time": {
+          "type": "string",
+          "example": "10:00"
+        }
+      }
+    },
+    "MetaJsonV140": {
+      "required": [
+        "license"
+      ],
+      "properties": {
+        "license": {
+          "$ref": "#/definitions/LicenseJsonV140"
+        }
+      }
+    },
+    "LicenseJsonV140": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "TESOBE"
+        },
+        "id": {
+          "type": "string",
+          "example": "5"
+        }
+      }
+    },
+    "LobbyJsonV330": {
+      "required": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "properties": {
+        "sunday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        },
+        "tuesday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        },
+        "wednesday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        },
+        "monday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        },
+        "friday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        },
+        "thursday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        },
+        "saturday": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpeningTimesV300"
+          }
+        }
+      }
+    },
+    "AddressJsonV300": {
+      "required": [
+        "line_1",
+        "line_2",
+        "line_3",
+        "city",
+        "county",
+        "state",
+        "postcode",
+        "country_code"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "example": "Berlin"
+        },
+        "line_2": {
+          "type": "string",
+          "example": "The Place"
+        },
+        "state": {
+          "type": "string",
+          "example": "Brandenburg"
+        },
+        "postcode": {
+          "type": "string",
+          "example": "13359"
+        },
+        "county": {
+          "type": "string",
+          "example": ""
+        },
+        "country_code": {
+          "type": "string",
+          "example": "DE"
+        },
+        "line_3": {
+          "type": "string",
+          "example": "The Hill"
+        },
+        "line_1": {
+          "type": "string",
+          "example": "No 1 the Road"
+        }
+      }
+    },
+    "CheckbookOrdersJson": {
+      "required": [
+        "account",
+        "orders"
+      ],
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderJson"
+          }
+        },
+        "account": {
+          "$ref": "#/definitions/AccountV310Json"
+        }
+      }
+    },
+    "OrderJson": {
+      "required": [
+        "order"
+      ],
+      "properties": {
+        "order": {
+          "$ref": "#/definitions/OrderObjectJson"
+        }
+      }
+    },
+    "OrderObjectJson": {
+      "required": [
+        "order_id",
+        "order_date",
+        "number_of_checkbooks",
+        "distribution_channel",
+        "status",
+        "first_check_number",
+        "shipping_code"
+      ],
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "example": "xjksajfkj"
+        },
+        "number_of_checkbooks": {
+          "type": "string",
+          "example": "4"
+        },
+        "first_check_number": {
+          "type": "string",
+          "example": "5165276"
+        },
+        "order_date": {
+          "type": "string",
+          "example": "07082013"
+        },
+        "status": {
+          "type": "string",
+          "example": "2"
+        },
+        "shipping_code": {
+          "type": "string",
+          "example": "1"
+        },
+        "distribution_channel": {
+          "type": "string",
+          "example": "1201"
+        }
+      }
+    },
+    "AccountV310Json": {
+      "required": [
+        "bank_id",
+        "account_id",
+        "account_type",
+        "account_routings",
+        "branch_routings"
+      ],
+      "properties": {
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "account_type": {
+          "type": "string",
+          "example": "330"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "10"
+        },
+        "account_id": {
+          "type": "string",
+          "example": "xjfsafjj"
+        },
+        "branch_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchRoutingJsonV141"
+          }
+        }
+      }
+    },
+    "AccountRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "4930396"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "AccountNumber"
+        }
+      }
+    },
+    "CreditCardOrderStatusResponseJson": {
+      "required": [
+        "cards"
+      ],
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CardObjectJson"
+          }
+        }
+      }
+    },
+    "CardObjectJson": {
+      "required": [
+        "card_type",
+        "card_description",
+        "use_type"
+      ],
+      "properties": {
+        "use_type": {
+          "type": "string",
+          "example": "3"
+        },
+        "card_description": {
+          "type": "string",
+          "example": "good"
+        },
+        "card_type": {
+          "type": "string",
+          "example": "5"
+        }
+      }
+    },
+    "CreditLimitOrderJson": {
+      "required": [
+        "rank_amount_1",
+        "nominal_interest_1",
+        "rank_amount_2",
+        "nominal_interest_2"
+      ],
+      "properties": {
+        "nominal_interest_2": {
+          "type": "string",
+          "example": "String"
+        },
+        "rank_amount_2": {
+          "type": "string",
+          "example": "String"
+        },
+        "nominal_interest_1": {
+          "type": "string",
+          "example": "String"
+        },
+        "rank_amount_1": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "CreditLimitOrderRequestJson": {
+      "required": [
+        "requested_current_rate_amount1",
+        "requested_current_rate_amount2",
+        "requested_current_valid_end_date",
+        "current_credit_documentation",
+        "temporary_requested_current_amount",
+        "requested_temporary_valid_end_date",
+        "temporary_credit_documentation"
+      ],
+      "properties": {
+        "requested_current_rate_amount1": {
+          "type": "string",
+          "example": "String"
+        },
+        "temporary_credit_documentation": {
+          "type": "string",
+          "example": "String"
+        },
+        "requested_current_valid_end_date": {
+          "type": "string",
+          "example": "String"
+        },
+        "temporary_requested_current_amount": {
+          "type": "string",
+          "example": "String"
+        },
+        "requested_current_rate_amount2": {
+          "type": "string",
+          "example": "String"
+        },
+        "requested_temporary_valid_end_date": {
+          "type": "string",
+          "example": "String"
+        },
+        "current_credit_documentation": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "CreditLimitOrderResponseJson": {
+      "required": [
+        "execution_time",
+        "execution_date",
+        "token",
+        "short_reference"
+      ],
+      "properties": {
+        "short_reference": {
+          "type": "string",
+          "example": "String"
+        },
+        "token": {
+          "type": "string",
+          "example": "String"
+        },
+        "execution_date": {
+          "type": "string",
+          "example": "String"
+        },
+        "execution_time": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    }
+  }
+}

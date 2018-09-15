@@ -1,0 +1,326 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Bank-Product",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-bank-product",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.1.0/banks/{BANK_ID}/products": {
+      "get": {
+        "tags": [
+          "Bank-Product"
+        ],
+        "summary": "Get Bank Products",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about the financial products offered by a bank specified by BANK_ID including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eName\u003c/li\u003e  \u003cli\u003eCode\u003c/li\u003e  \u003cli\u003eCategory\u003c/li\u003e  \u003cli\u003eFamily\u003c/li\u003e  \u003cli\u003eSuper Family\u003c/li\u003e  \u003cli\u003eMore info URL\u003c/li\u003e  \u003cli\u003eDescription\u003c/li\u003e  \u003cli\u003eTerms and Conditions\u003c/li\u003e  \u003cli\u003eLicense the data under this endpoint is released under Authentication is Optional\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv2_1_0-getProducts",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProductsJsonV210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/products/PRODUCT_CODE": {
+      "get": {
+        "tags": [
+          "Bank-Product"
+        ],
+        "summary": "Get Bank Product",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about the financial products offered by a bank specified by BANK_ID and PRODUCT_CODE including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eName\u003c/li\u003e  \u003cli\u003eCode\u003c/li\u003e  \u003cli\u003eCategory\u003c/li\u003e  \u003cli\u003eFamily\u003c/li\u003e  \u003cli\u003eSuper Family\u003c/li\u003e  \u003cli\u003eMore info URL\u003c/li\u003e  \u003cli\u003eDescription\u003c/li\u003e  \u003cli\u003eTerms and Conditions\u003c/li\u003e  \u003cli\u003eLicense the data under this endpoint is released under Authentication is Optional\u003c/li\u003e\u003c/ul\u003e",
+        "operationId": "vv2_1_0-getProduct",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProductJsonV210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/banks/{BANK_ID}/products": {
+      "put": {
+        "tags": [
+          "Bank-Product"
+        ],
+        "summary": "Create Product",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate or Update Product for the Bank.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eOBP-20006: User is missing one or more roles: CanCreateProduct OR CanCreateProductAtAnyBank\u003c/p\u003e",
+        "operationId": "vv2_2_0-createProduct",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProductJsonV220"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProductJsonV220"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ProductsJsonV210": {
+      "required": [
+        "products"
+      ],
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductJsonV210"
+          }
+        }
+      }
+    },
+    "ProductJsonV210": {
+      "required": [
+        "bank_id",
+        "code",
+        "name",
+        "category",
+        "family",
+        "super_family",
+        "more_info_url",
+        "details",
+        "description",
+        "meta"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "product name"
+        },
+        "description": {
+          "type": "string",
+          "example": "Description"
+        },
+        "more_info_url": {
+          "type": "string",
+          "example": "www.example.com/prod1/more-info.html"
+        },
+        "super_family": {
+          "type": "string",
+          "example": "super family"
+        },
+        "code": {
+          "type": "string",
+          "example": "prod1"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bankid123"
+        },
+        "meta": {
+          "$ref": "#/definitions/MetaJsonV140"
+        },
+        "details": {
+          "type": "string",
+          "example": "Details"
+        },
+        "category": {
+          "type": "string",
+          "example": "category"
+        },
+        "family": {
+          "type": "string",
+          "example": "family"
+        }
+      }
+    },
+    "MetaJsonV140": {
+      "required": [
+        "license"
+      ],
+      "properties": {
+        "license": {
+          "$ref": "#/definitions/LicenseJsonV140"
+        }
+      }
+    },
+    "LicenseJsonV140": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "TESOBE"
+        },
+        "id": {
+          "type": "string",
+          "example": "5"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "ProductJsonV220": {
+      "required": [
+        "bank_id",
+        "code",
+        "name",
+        "category",
+        "family",
+        "super_family",
+        "more_info_url",
+        "details",
+        "description",
+        "meta"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "product name"
+        },
+        "description": {
+          "type": "string",
+          "example": "Description"
+        },
+        "more_info_url": {
+          "type": "string",
+          "example": "www.example.com/prod1/more-info.html"
+        },
+        "super_family": {
+          "type": "string",
+          "example": "super family"
+        },
+        "code": {
+          "type": "string",
+          "example": "prod1"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bankid123"
+        },
+        "meta": {
+          "$ref": "#/definitions/MetaJsonV140"
+        },
+        "details": {
+          "type": "string",
+          "example": "Details"
+        },
+        "category": {
+          "type": "string",
+          "example": "category"
+        },
+        "family": {
+          "type": "string",
+          "example": "family"
+        }
+      }
+    }
+  }
+}

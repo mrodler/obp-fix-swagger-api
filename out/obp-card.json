@@ -1,0 +1,769 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Card",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-card",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.3.0/banks/{BANK_ID}/cards": {
+      "get": {
+        "tags": [
+          "Card"
+        ],
+        "summary": "Get cards for the specified bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "",
+        "operationId": "vv1_3_0-getCardsForBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PhysicalCardsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.3.0/cards": {
+      "get": {
+        "tags": [
+          "Card"
+        ],
+        "summary": "Get cards for the current user",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns data about all the physical cards a user has been issued. These could be debit cards, credit cards, etc.\u003c/p\u003e",
+        "operationId": "vv1_3_0-getCards",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PhysicalCardsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/cards": {
+      "post": {
+        "tags": [
+          "Card"
+        ],
+        "summary": "Create Card",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Card at bank specified by BANK_ID .\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-addCardsForBank",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostPhysicalCardJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PhysicalCardJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "PhysicalCardsJSON": {
+      "required": [
+        "cards"
+      ],
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PhysicalCardJSON"
+          }
+        }
+      }
+    },
+    "PhysicalCardJSON": {
+      "required": [
+        "bank_id",
+        "bank_card_number",
+        "name_on_card",
+        "issue_number",
+        "serial_number",
+        "valid_from_date",
+        "expires_date",
+        "enabled",
+        "cancelled",
+        "on_hot_list",
+        "technology",
+        "networks",
+        "allows",
+        "account",
+        "replacement",
+        "pin_reset",
+        "collected",
+        "posted"
+      ],
+      "properties": {
+        "allows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expires_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "networks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "issue_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "replacement": {
+          "$ref": "#/definitions/ReplacementJSON"
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "collected": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "technology": {
+          "type": "string",
+          "example": "String"
+        },
+        "cancelled": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "pin_reset": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PinResetJSON"
+          }
+        },
+        "serial_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "account": {
+          "$ref": "#/definitions/AccountJSON"
+        },
+        "valid_from_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "bank_card_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "name_on_card": {
+          "type": "string",
+          "example": "String"
+        },
+        "posted": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "on_hot_list": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "ReplacementJSON": {
+      "required": [
+        "requested_date",
+        "reason_requested"
+      ],
+      "properties": {
+        "reason_requested": {
+          "type": "string",
+          "example": "RENEW"
+        },
+        "requested_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "PinResetJSON": {
+      "required": [
+        "requested_date",
+        "reason_requested"
+      ],
+      "properties": {
+        "reason_requested": {
+          "type": "string",
+          "example": "GOOD_SECURITY_PRACTICE"
+        },
+        "requested_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "AccountJSON": {
+      "required": [
+        "id",
+        "label",
+        "views_available",
+        "bank_id"
+      ],
+      "properties": {
+        "bank_id": {
+          "type": "string",
+          "example": "gh.uk.db"
+        },
+        "views_available": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewJSONV121"
+          }
+        },
+        "label": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "123"
+        }
+      }
+    },
+    "ViewJSONV121": {
+      "required": [
+        "id",
+        "short_name",
+        "description",
+        "is_public",
+        "alias",
+        "hide_metadata_if_alias_used",
+        "can_add_comment",
+        "can_add_corporate_location",
+        "can_add_image",
+        "can_add_image_url",
+        "can_add_more_info",
+        "can_add_open_corporates_url",
+        "can_add_physical_location",
+        "can_add_private_alias",
+        "can_add_public_alias",
+        "can_add_tag",
+        "can_add_url",
+        "can_add_where_tag",
+        "can_delete_comment",
+        "can_delete_corporate_location",
+        "can_delete_image",
+        "can_delete_physical_location",
+        "can_delete_tag",
+        "can_delete_where_tag",
+        "can_edit_owner_comment",
+        "can_see_bank_account_balance",
+        "can_see_bank_account_bank_name",
+        "can_see_bank_account_currency",
+        "can_see_bank_account_iban",
+        "can_see_bank_account_label",
+        "can_see_bank_account_national_identifier",
+        "can_see_bank_account_number",
+        "can_see_bank_account_owners",
+        "can_see_bank_account_swift_bic",
+        "can_see_bank_account_type",
+        "can_see_comments",
+        "can_see_corporate_location",
+        "can_see_image_url",
+        "can_see_images",
+        "can_see_more_info",
+        "can_see_open_corporates_url",
+        "can_see_other_account_bank_name",
+        "can_see_other_account_iban",
+        "can_see_other_account_kind",
+        "can_see_other_account_metadata",
+        "can_see_other_account_national_identifier",
+        "can_see_other_account_number",
+        "can_see_other_account_swift_bic",
+        "can_see_owner_comment",
+        "can_see_physical_location",
+        "can_see_private_alias",
+        "can_see_public_alias",
+        "can_see_tags",
+        "can_see_transaction_amount",
+        "can_see_transaction_balance",
+        "can_see_transaction_currency",
+        "can_see_transaction_description",
+        "can_see_transaction_finish_date",
+        "can_see_transaction_metadata",
+        "can_see_transaction_other_bank_account",
+        "can_see_transaction_start_date",
+        "can_see_transaction_this_bank_account",
+        "can_see_transaction_type",
+        "can_see_url",
+        "can_see_where_tag"
+      ],
+      "properties": {
+        "can_see_transaction_start_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_this_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_owners": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_edit_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "description": {
+          "type": "string",
+          "example": "description"
+        },
+        "can_see_transaction_other_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_comments": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_kind": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_label": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_finish_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_images": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "hide_metadata_if_alias_used": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "alias": {
+          "type": "string",
+          "example": "None"
+        },
+        "can_add_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "id": {
+          "type": "string",
+          "example": "123"
+        },
+        "can_see_bank_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_tags": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "short_name"
+        },
+        "can_delete_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_amount": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_description": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "PostPhysicalCardJSON": {
+      "required": [
+        "bank_card_number",
+        "name_on_card",
+        "issue_number",
+        "serial_number",
+        "valid_from_date",
+        "expires_date",
+        "enabled",
+        "technology",
+        "networks",
+        "allows",
+        "account_id",
+        "replacement",
+        "pin_reset",
+        "collected",
+        "posted"
+      ],
+      "properties": {
+        "allows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expires_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "networks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "issue_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "replacement": {
+          "$ref": "#/definitions/ReplacementJSON"
+        },
+        "enabled": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "collected": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "technology": {
+          "type": "string",
+          "example": "String"
+        },
+        "account_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "pin_reset": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PinResetJSON"
+          }
+        },
+        "serial_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "valid_from_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "bank_card_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "name_on_card": {
+          "type": "string",
+          "example": "String"
+        },
+        "posted": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    }
+  }
+}

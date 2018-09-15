@@ -1,0 +1,2160 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Transaction",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-transaction",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/comments": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get comments.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the transaction TRANSACTION_ID comments made on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e (VIEW_ID).\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getCommentsForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionCommentsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Add comment.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003ePosts a comment about a transaction TRANSACTION_ID on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e VIEW_ID.\u003c/p\u003e\u003cp\u003e${authenticationRequiredMessage(false)}\u003c/p\u003e\u003cp\u003eAuthentication is required since the comment is linked with the user.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addCommentForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostTransactionCommentJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionCommentJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/comments/{COMMENT_ID}": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Delete comment.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete the comment COMMENT_ID about the transaction TRANSACTION_ID made on \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required. The user must either have owner privileges for this account, or must be the user that posted the comment.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteCommentForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "COMMENT_ID",
+            "description": "The comment id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/images": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get images.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the transaction TRANSACTION_ID images made on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e (VIEW_ID).  Authentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getImagesForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionImagesJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Add an image.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003ePosts an image about a transaction TRANSACTION_ID on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e VIEW_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eThe image is linked with the user.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addImageForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostTransactionImageJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionImageJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidJsonFormat"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/images/{IMAGE_ID}": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Delete an image",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the image IMAGE_ID about the transaction TRANSACTION_ID made on \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required. The user must either have owner privileges for this account, or must be the user that posted the image.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteImageForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "IMAGE_ID",
+            "description": "The image id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/narrative": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Delete narrative.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the description of the transaction TRANSACTION_ID.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteTransactionNarrative",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get narrative.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the account owner description of the transaction \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003emoderated\u003c/a\u003e by the view.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getTransactionNarrative",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionNarrativeJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Add narrative.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreates a description of the transaction TRANSACTION_ID.\u003c/p\u003e\u003cp\u003eNote: Unlike other items of metadata, there is only one \"narrative\" per transaction accross all views. If you set narrative via a view e.g. view-x it will be seen via view-y (as long as view-y has permission to see the narrative).\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addTransactionNarrative",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionNarrativeJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidJsonFormat"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Update narrative.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdates the description of the transaction TRANSACTION_ID.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateTransactionNarrative",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionNarrativeJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidJsonFormat"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/tags": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get tags.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the transaction TRANSACTION_ID tags made on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e (VIEW_ID).  Authentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getTagsForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionTagJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Add a tag.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003ePosts a tag about a transaction TRANSACTION_ID on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e VIEW_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eAuthentication is required as the tag is linked with the user.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addTagForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostTransactionTagJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionTagJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/tags/{TAG_ID}": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Delete a tag.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the tag TAG_ID about the transaction TRANSACTION_ID made on \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e. Authentication via OAuth is required. The user must either have owner privileges for this account, or must be the user that posted the tag.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteTagForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TAG_ID",
+            "description": "The tag id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorNoViewPermission"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/metadata/where": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Delete where tag.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDeletes the where tag of the transaction TRANSACTION_ID made on \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eThe user must either have owner privileges for this account, or must be the user that posted the geo tag.\u003c/p\u003e",
+        "operationId": "vv1_2_1-deleteWhereTagForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get where tag.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the \"where\" Geo tag added to the transaction TRANSACTION_ID made on a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e (VIEW_ID). It represents the location where the transaction has been initiated.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getWhereTagForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionWhereJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Add where tag.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreates a \"where\" Geo tag on a transaction TRANSACTION_ID in a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eThe geo tag is linked with the user.\u003c/p\u003e",
+        "operationId": "vv1_2_1-addWhereTagForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostTransactionWhereJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Update where tag.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eUpdates the \"where\" Geo tag on a transaction TRANSACTION_ID in a \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eThe geo tag is linked with the user.\u003c/p\u003e",
+        "operationId": "vv1_2_1-updateWhereTagForViewOnTransaction",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostTransactionWhereJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/other_account": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get Other Account of Transaction",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet other account of a transaction. Returns details of the other party involved in the transaction, moderated by the \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003eview\u003c/a\u003e (VIEW_ID).  Authentication via OAuth is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getOtherAccountForTransaction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OtherAccountJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions/{TRANSACTION_ID}/transaction": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get Transaction by Id.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns one transaction specified by TRANSACTION_ID of the account ACCOUNT_ID and \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003emoderated\u003c/a\u003e by the view (VIEW_ID).\u003c/p\u003e\u003cp\u003eAuthentication is Optional Authentication is required if the view is not public.\u003c/p\u003e",
+        "operationId": "vv1_2_1-getTransactionByIdForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TRANSACTION_ID",
+            "description": "The transaction id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankAccountNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/{VIEW_ID}/transactions": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get Transactions for Account (Full)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns transactions list of the account specified by ACCOUNT_ID and \u003ca href\u003d\"#1_2_1-getViewsForBankAccount\"\u003emoderated\u003c/a\u003e by the view (VIEW_ID).\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e\u003cp\u003eAuthentication is required if the view is not public.\u003c/p\u003e\u003cp\u003ePossible custom headers for pagination:\u003c/p\u003e\u003cul\u003e  \u003cli\u003esort_direction\u003dASC/DESC \u003d\u003d\u0026gt; default value: DESC. The sort field is the completed date.\u003c/li\u003e  \u003cli\u003elimit\u003dNUMBER \u003d\u003d\u0026gt; default value: 50\u003c/li\u003e  \u003cli\u003eoffset\u003dNUMBER \u003d\u003d\u0026gt; default value: 0\u003c/li\u003e  \u003cli\u003efrom_date\u003dDATE \u003d\u0026gt; default value: 0000-00-00T00:00:00.000Z\u003c/li\u003e  \u003cli\u003eto_date\u003dDATE \u003d\u0026gt; default value: 3049-01-01T00:00:00.000Z\u003c/li\u003e\u003c/ul\u003e\u003cp\u003e\u003cstrong\u003eDate format parameter\u003c/strong\u003e: yyyy-MM-dd\u0027T\u0027HH:mm:ss.SSS\u0027Z\u0027(2017-09-19T02:31:05.000Z) \u003d\u003d\u0026gt; time zone is UTC.\u003c/p\u003e",
+        "operationId": "vv3_0_0-getTransactionsForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorFilterSortDirectionError"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/my/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/transactions": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "summary": "Get Transactions for Account (Core)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns transactions list (Core info) of the account specified by ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003ePossible custom headers for pagination:\u003c/p\u003e\u003cul\u003e  \u003cli\u003esort_direction\u003dASC/DESC \u003d\u003d\u0026gt; default value: DESC. The sort field is the completed date.\u003c/li\u003e  \u003cli\u003elimit\u003dNUMBER \u003d\u003d\u0026gt; default value: 50\u003c/li\u003e  \u003cli\u003eoffset\u003dNUMBER \u003d\u003d\u0026gt; default value: 0\u003c/li\u003e  \u003cli\u003efrom_date\u003dDATE \u003d\u0026gt; default value: 0000-00-00T00:00:00.000Z\u003c/li\u003e  \u003cli\u003eto_date\u003dDATE \u003d\u0026gt; default value: 3049-01-01T00:00:00.000Z\u003c/li\u003e\u003c/ul\u003e\u003cp\u003e\u003cstrong\u003eDate format parameter\u003c/strong\u003e: yyyy-MM-dd\u0027T\u0027HH:mm:ss.SSS\u0027Z\u0027(2017-09-19T02:31:05.000Z) \u003d\u003d\u0026gt; time zone is UTC.\u003c/p\u003e",
+        "operationId": "vv3_0_0-getCoreTransactionsForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CoreTransactionsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorFilterSortDirectionError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TransactionCommentsJSON": {
+      "required": [
+        "comments"
+      ],
+      "properties": {
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionCommentJSON"
+          }
+        }
+      }
+    },
+    "TransactionCommentJSON": {
+      "required": [
+        "id",
+        "value",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "value": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "UserJSONV121": {
+      "required": [
+        "id",
+        "provider",
+        "display_name"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "PostTransactionCommentJSON": {
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "ErrorBankAccountNotFound": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-30018: Bank Account not found. Please specify valid values for BANK_ID and ACCOUNT_ID. "
+        }
+      }
+    },
+    "TransactionImagesJSON": {
+      "required": [
+        "images"
+      ],
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionImageJSON"
+          }
+        }
+      }
+    },
+    "TransactionImageJSON": {
+      "required": [
+        "id",
+        "label",
+        "URL",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "label": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        }
+      }
+    },
+    "PostTransactionImageJSON": {
+      "required": [
+        "label",
+        "URL"
+      ],
+      "properties": {
+        "URL": {
+          "type": "string",
+          "example": "String"
+        },
+        "label": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ErrorInvalidJsonFormat": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10001: Incorrect json format."
+        }
+      }
+    },
+    "TransactionNarrativeJSON": {
+      "required": [
+        "narrative"
+      ],
+      "properties": {
+        "narrative": {
+          "type": "string",
+          "example": "narative"
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "TransactionTagJSON": {
+      "required": [
+        "id",
+        "value",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "value": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "PostTransactionTagJSON": {
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ErrorNoViewPermission": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-30022: The current view does not have the permission: "
+        }
+      }
+    },
+    "TransactionWhereJSON": {
+      "required": [
+        "where"
+      ],
+      "properties": {
+        "where": {
+          "$ref": "#/definitions/LocationJSONV121"
+        }
+      }
+    },
+    "LocationJSONV121": {
+      "required": [
+        "latitude",
+        "longitude",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.231"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.231"
+        }
+      }
+    },
+    "PostTransactionWhereJSON": {
+      "required": [
+        "where"
+      ],
+      "properties": {
+        "where": {
+          "$ref": "#/definitions/LocationPlainJSON"
+        }
+      }
+    },
+    "LocationPlainJSON": {
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.535"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.532"
+        }
+      }
+    },
+    "OtherAccountJSON": {
+      "required": [
+        "id",
+        "holder",
+        "number",
+        "kind",
+        "IBAN",
+        "swift_bic",
+        "bank",
+        "metadata"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "123"
+        },
+        "IBAN": {
+          "type": "string",
+          "example": "UK234DB"
+        },
+        "swift_bic": {
+          "type": "string",
+          "example": "UK12321DB"
+        },
+        "holder": {
+          "$ref": "#/definitions/AccountHolderJSON"
+        },
+        "bank": {
+          "$ref": "#/definitions/MinimalBankJSON"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "metadata": {
+          "$ref": "#/definitions/OtherAccountMetadataJSON"
+        },
+        "kind": {
+          "type": "string",
+          "example": "3456"
+        }
+      }
+    },
+    "AccountHolderJSON": {
+      "required": [
+        "name",
+        "is_alias"
+      ],
+      "properties": {
+        "is_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "name": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "MinimalBankJSON": {
+      "required": [
+        "national_identifier",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "national_identifier": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "OtherAccountMetadataJSON": {
+      "required": [
+        "public_alias",
+        "private_alias",
+        "more_info",
+        "URL",
+        "image_URL",
+        "open_corporates_URL",
+        "corporate_location",
+        "physical_location"
+      ],
+      "properties": {
+        "public_alias": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "image_URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "physical_location": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "private_alias": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "more_info": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "corporate_location": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "open_corporates_URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        }
+      }
+    },
+    "TransactionJSON": {
+      "required": [
+        "id",
+        "this_account",
+        "other_account",
+        "details",
+        "metadata"
+      ],
+      "properties": {
+        "this_account": {
+          "$ref": "#/definitions/ThisAccountJSON"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "details": {
+          "$ref": "#/definitions/TransactionDetailsJSON"
+        },
+        "metadata": {
+          "$ref": "#/definitions/TransactionMetadataJSON"
+        },
+        "other_account": {
+          "$ref": "#/definitions/OtherAccountJSON"
+        }
+      }
+    },
+    "ThisAccountJSON": {
+      "required": [
+        "id",
+        "holders",
+        "number",
+        "kind",
+        "IBAN",
+        "swift_bic",
+        "bank"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "123"
+        },
+        "IBAN": {
+          "type": "string",
+          "example": "UK1234AD"
+        },
+        "swift_bic": {
+          "type": "string",
+          "example": "UK1234AD"
+        },
+        "bank": {
+          "$ref": "#/definitions/MinimalBankJSON"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "holders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountHolderJSON"
+          }
+        },
+        "kind": {
+          "type": "string",
+          "example": "AC"
+        }
+      }
+    },
+    "TransactionDetailsJSON": {
+      "required": [
+        "type",
+        "description",
+        "posted",
+        "completed",
+        "new_balance",
+        "value"
+      ],
+      "properties": {
+        "new_balance": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "description": {
+          "type": "string",
+          "example": "this is for family"
+        },
+        "completed": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "type": {
+          "type": "string",
+          "example": "AC"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "posted": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "TransactionMetadataJSON": {
+      "required": [
+        "narrative",
+        "comments",
+        "tags",
+        "images",
+        "where"
+      ],
+      "properties": {
+        "narrative": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionTagJSON"
+          }
+        },
+        "where": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionImageJSON"
+          }
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionCommentJSON"
+          }
+        }
+      }
+    },
+    "TransactionsJsonV300": {
+      "required": [
+        "transactions"
+      ],
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionJsonV300"
+          }
+        }
+      }
+    },
+    "TransactionJsonV300": {
+      "required": [
+        "id",
+        "this_account",
+        "other_account",
+        "details",
+        "metadata"
+      ],
+      "properties": {
+        "this_account": {
+          "$ref": "#/definitions/ThisAccountJsonV300"
+        },
+        "id": {
+          "type": "string",
+          "example": "String"
+        },
+        "details": {
+          "$ref": "#/definitions/TransactionDetailsJSON"
+        },
+        "metadata": {
+          "$ref": "#/definitions/TransactionMetadataJSON"
+        },
+        "other_account": {
+          "$ref": "#/definitions/OtherAccountJsonV300"
+        }
+      }
+    },
+    "ThisAccountJsonV300": {
+      "required": [
+        "id",
+        "bank_routing",
+        "account_routings",
+        "holders"
+      ],
+      "properties": {
+        "holders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountHolderJSON"
+          }
+        },
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        },
+        "id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "AccountRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "4930396"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "AccountNumber"
+        }
+      }
+    },
+    "BankRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "Bank_ID"
+        }
+      }
+    },
+    "OtherAccountJsonV300": {
+      "required": [
+        "id",
+        "holder",
+        "bank_routing",
+        "account_routings",
+        "metadata"
+      ],
+      "properties": {
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "holder": {
+          "$ref": "#/definitions/AccountHolderJSON"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "metadata": {
+          "$ref": "#/definitions/OtherAccountMetadataJSON"
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        }
+      }
+    },
+    "ErrorFilterSortDirectionError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10023: obp_sort_direction parameter can only take two values: DESC or ASC!"
+        }
+      }
+    },
+    "CoreTransactionsJsonV300": {
+      "required": [
+        "transactions"
+      ],
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoreTransactionJsonV300"
+          }
+        }
+      }
+    },
+    "CoreTransactionJsonV300": {
+      "required": [
+        "id",
+        "this_account",
+        "other_account",
+        "details"
+      ],
+      "properties": {
+        "details": {
+          "$ref": "#/definitions/CoreTransactionDetailsJSON"
+        },
+        "other_account": {
+          "$ref": "#/definitions/CoreCounterpartyJsonV300"
+        },
+        "this_account": {
+          "$ref": "#/definitions/ThisAccountJsonV300"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "CoreTransactionDetailsJSON": {
+      "required": [
+        "type",
+        "description",
+        "posted",
+        "completed",
+        "new_balance",
+        "value"
+      ],
+      "properties": {
+        "new_balance": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "description": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "completed": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "type": {
+          "type": "string",
+          "example": "AC"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "posted": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "CoreCounterpartyJsonV300": {
+      "required": [
+        "id",
+        "holder",
+        "bank_routing",
+        "account_routings"
+      ],
+      "properties": {
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        },
+        "holder": {
+          "$ref": "#/definitions/AccountHolderJSON"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    }
+  }
+}

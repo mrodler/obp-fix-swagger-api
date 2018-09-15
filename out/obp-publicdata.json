@@ -1,0 +1,238 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-PublicData",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-publicdata",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/accounts/public": {
+      "get": {
+        "tags": [
+          "PublicData"
+        ],
+        "summary": "Get Public Accounts at all Banks.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet public accounts at all banks (Anonymous access). Returns accounts that contain at least one public view (a view where is_public is true) For each account the API returns the ID and the available views.\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv2_0_0-publicAccountsAllBanks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BasicAccountsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/accounts": {
+      "get": {
+        "tags": [
+          "PublicData"
+        ],
+        "summary": "Get Accounts at Bank.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the list of accounts at BANK_ID that the user has access to. For each account the API returns the account ID and the views available to the user.. Each account must have at least one private View.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getPrivateAccountsAtOneBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BasicAccountsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorBankNotFound"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/accounts/public": {
+      "get": {
+        "tags": [
+          "PublicData"
+        ],
+        "summary": "Get Public Accounts at Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns a list of the public accounts (Anonymous access) at BANK_ID. For each account the API returns the ID and the available views.\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv2_0_0-publicAccountsAtOneBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BasicAccountsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUnknownError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "BasicAccountsJSON": {
+      "required": [
+        "accounts"
+      ],
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BasicAccountJSON"
+          }
+        }
+      }
+    },
+    "BasicAccountJSON": {
+      "required": [
+        "id",
+        "label",
+        "bank_id",
+        "views_available"
+      ],
+      "properties": {
+        "views_available": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BasicViewJson"
+          }
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "label": {
+          "type": "string",
+          "example": "NoneLabel"
+        },
+        "id": {
+          "type": "string",
+          "example": "8ca8a7e4-6d02-48e3-a029-0b2bf89de9f0"
+        }
+      }
+    },
+    "BasicViewJson": {
+      "required": [
+        "id",
+        "short_name",
+        "is_public"
+      ],
+      "properties": {
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "HHH"
+        },
+        "id": {
+          "type": "string",
+          "example": "1"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "ErrorBankNotFound": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-30001: Bank not found. Please specify a valid value for BANK_ID."
+        }
+      }
+    },
+    "ErrorUnknownError": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-50000: Unknown Error."
+        }
+      }
+    }
+  }
+}

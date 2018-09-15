@@ -1,0 +1,321 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Onboarding",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-onboarding",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/users": {
+      "post": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Create User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreates OBP user.  No authorisation (currently) required.\u003c/p\u003e\u003cp\u003eMimics current webform to Register.\u003c/p\u003e\u003cp\u003eRequires username(email) and password.\u003c/p\u003e\u003cp\u003eReturns 409 error if username not unique.\u003c/p\u003e\u003cp\u003eMay require validation of email address.\u003c/p\u003e",
+        "operationId": "vv2_0_0-createUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserJson"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserJsonV200"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}": {
+      "put": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Create Account",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Account at bank specified by BANK_ID with Id specified by ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eThe User can create an Account for themself or an Account for another User if they have CanCreateAccount role.\u003c/p\u003e\u003cp\u003eIf USER_ID is not specified the account will be owned by the logged in User.\u003c/p\u003e\u003cp\u003eNote: The Amount must be zero.\u003c/p\u003e",
+        "operationId": "vv2_2_0-createAccount",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAccountJSONV220"
+            }
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreateAccountJSONV220"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidJsonFormat"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateUserJson": {
+      "required": [
+        "email",
+        "username",
+        "password",
+        "first_name",
+        "last_name"
+      ],
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "String"
+        },
+        "email": {
+          "type": "string",
+          "example": "String"
+        },
+        "username": {
+          "type": "string",
+          "example": "String"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "String"
+        },
+        "password": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "UserJsonV200": {
+      "required": [
+        "user_id",
+        "email",
+        "provider_id",
+        "provider",
+        "username",
+        "entitlements"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "email": {
+          "type": "string",
+          "example": "robert.x.0.gh@example.com"
+        },
+        "username": {
+          "type": "string",
+          "example": "robert.x.0.gh"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "entitlements": {
+          "$ref": "#/definitions/EntitlementJSONs"
+        }
+      }
+    },
+    "EntitlementJSONs": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitlementJSON"
+          }
+        }
+      }
+    },
+    "EntitlementJSON": {
+      "required": [
+        "entitlement_id",
+        "role_name",
+        "bank_id"
+      ],
+      "properties": {
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanQueryOtherUser"
+        },
+        "entitlement_id": {
+          "type": "string",
+          "example": "6fb17583-1e49-4435-bb74-a14fe0996723"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "CreateAccountJSONV220": {
+      "required": [
+        "user_id",
+        "label",
+        "type",
+        "balance",
+        "branch_id",
+        "account_routing"
+      ],
+      "properties": {
+        "account_routing": {
+          "$ref": "#/definitions/AccountRoutingJsonV121"
+        },
+        "branch_id": {
+          "type": "string",
+          "example": "1234"
+        },
+        "label": {
+          "type": "string",
+          "example": "Label"
+        },
+        "balance": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "66214b8e-259e-44ad-8868-3eb47be70646"
+        },
+        "type": {
+          "type": "string",
+          "example": "CURRENT"
+        }
+      }
+    },
+    "AccountRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "4930396"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "AccountNumber"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "ErrorInvalidJsonFormat": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10001: Incorrect json format."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Experimental",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-experimental",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.0.0/banks/{BANK_ID}/meetings": {
+      "get": {
+        "tags": [
+          "Experimental"
+        ],
+        "summary": "Get Meetings",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eMeetings contain meta data about, and are used to facilitate, video conferences / chats etc.\u003c/p\u003e\u003cp\u003eThe actual conference/chats are handled by external services.\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eThis call is \u003cstrong\u003eexperimental\u003c/strong\u003e and will require further authorisation in the future.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getMeetings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MeetingsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Experimental"
+        ],
+        "summary": "Create Meeting (video conference/call)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Meeting: Initiate a video conference/call with the bank.\u003c/p\u003e\u003cp\u003eThe Meetings resource contains meta data about video/other conference sessions, not the video/audio/chat itself.\u003c/p\u003e\u003cp\u003eThe actual conferencing is handled by external providers. Currently OBP supports tokbox video conferences (WIP).\u003c/p\u003e\u003cp\u003eThis is not a recomendation of tokbox per se.\u003c/p\u003e\u003cp\u003eprovider_id determines the provider of the meeting / video chat service. MUST be url friendly (no spaces).\u003c/p\u003e\u003cp\u003epurpose_id explains the purpose of the chat. onboarding | mortgage | complaint etc. MUST be url friendly (no spaces).\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eThis call is \u003cstrong\u003eexperimental\u003c/strong\u003e. Currently staff_user_id is not set. Further calls will be needed to correctly set this.\u003c/p\u003e",
+        "operationId": "vv2_0_0-createMeeting",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateMeetingJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MeetingJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/meetings/MEETING_ID": {
+      "get": {
+        "tags": [
+          "Experimental"
+        ],
+        "summary": "Get Meeting",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Meeting specified by BANK_ID / MEETING_ID Meetings contain meta data about, and are used to facilitate, video conferences / chats etc.\u003c/p\u003e\u003cp\u003eThe actual conference/chats are handled by external services.\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eThis call is \u003cstrong\u003eexperimental\u003c/strong\u003e and will require further authorisation in the future.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getMeeting",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MeetingJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "MeetingsJson": {
+      "required": [
+        "meetings"
+      ],
+      "properties": {
+        "meetings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeetingJson"
+          }
+        }
+      }
+    },
+    "MeetingJson": {
+      "required": [
+        "meeting_id",
+        "provider_id",
+        "purpose_id",
+        "bank_id",
+        "present",
+        "keys",
+        "when"
+      ],
+      "properties": {
+        "present": {
+          "$ref": "#/definitions/MeetingPresentJson"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "purpose_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "when": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "meeting_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "keys": {
+          "$ref": "#/definitions/MeetingKeysJson"
+        }
+      }
+    },
+    "MeetingPresentJson": {
+      "required": [
+        "staff_user_id",
+        "customer_user_id"
+      ],
+      "properties": {
+        "customer_user_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "staff_user_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "MeetingKeysJson": {
+      "required": [
+        "session_id",
+        "staff_token",
+        "customer_token"
+      ],
+      "properties": {
+        "customer_token": {
+          "type": "string",
+          "example": "String"
+        },
+        "staff_token": {
+          "type": "string",
+          "example": "String"
+        },
+        "session_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "CreateMeetingJson": {
+      "required": [
+        "provider_id",
+        "purpose_id"
+      ],
+      "properties": {
+        "purpose_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Bank-ATM",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-bank-atm",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v3.0.0/banks/{BANK_ID}/atms": {
+      "get": {
+        "tags": [
+          "Bank-ATM"
+        ],
+        "summary": "Get Bank ATMS",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about ATMs for a single bank specified by BANK_ID including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eAddress\u003c/li\u003e  \u003cli\u003eGeo Location\u003c/li\u003e  \u003cli\u003eLicense the data under this endpoint is released under\u003c/li\u003e\u003c/ul\u003e\u003cp\u003ePagination:\u003c/p\u003e\u003cp\u003eBy default, 100 records are returned.\u003c/p\u003e\u003cp\u003eYou can use the url query parameters \u003cem\u003elimit\u003c/em\u003e and \u003cem\u003eoffset\u003c/em\u003e for pagination\u003c/p\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAtms",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AtmJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Bank-ATM"
+        ],
+        "summary": "Create ATM",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate ATM for the Bank.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eOBP-20006: User is missing one or more roles: CanCreateAtm OR CanCreateAtmAtAnyBank\u003c/p\u003e",
+        "operationId": "vv3_0_0-createAtm",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AtmJsonV300"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AtmJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/atms/ATM_ID": {
+      "get": {
+        "tags": [
+          "Bank-ATM"
+        ],
+        "summary": "Get Bank ATM",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns information about ATM for a single bank specified by BANK_ID and ATM_ID including:\u003c/p\u003e\u003cul\u003e  \u003cli\u003eAddress\u003c/li\u003e  \u003cli\u003eGeo Location\u003c/li\u003e  \u003cli\u003eLicense the data under this endpoint is released under\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eAuthentication is Optional\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAtm",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AtmJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AtmJsonV300": {
+      "required": [
+        "id",
+        "bank_id",
+        "name",
+        "address",
+        "location",
+        "meta",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+        "is_accessible",
+        "located_at",
+        "more_info",
+        "has_deposit_capability"
+      ],
+      "properties": {
+        "sunday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "name": {
+          "type": "string",
+          "example": "Atm by the Lake"
+        },
+        "location": {
+          "$ref": "#/definitions/LocationJsonV140"
+        },
+        "tuesday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "wednesday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "monday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "has_deposit_capability": {
+          "type": "string",
+          "example": "true"
+        },
+        "more_info": {
+          "type": "string",
+          "example": "short walk to the lake from here"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bank-id-123"
+        },
+        "id": {
+          "type": "string",
+          "example": "atm-id-123"
+        },
+        "meta": {
+          "$ref": "#/definitions/MetaJsonV140"
+        },
+        "address": {
+          "$ref": "#/definitions/AddressJsonV300"
+        },
+        "friday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "is_accessible": {
+          "type": "string",
+          "example": "true"
+        },
+        "thursday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "saturday": {
+          "$ref": "#/definitions/OpeningTimesV300"
+        },
+        "located_at": {
+          "type": "string",
+          "example": "Full service store"
+        }
+      }
+    },
+    "OpeningTimesV300": {
+      "required": [
+        "opening_time",
+        "closing_time"
+      ],
+      "properties": {
+        "closing_time": {
+          "type": "string",
+          "example": "18:00"
+        },
+        "opening_time": {
+          "type": "string",
+          "example": "10:00"
+        }
+      }
+    },
+    "LocationJsonV140": {
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "11.45"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "11.45"
+        }
+      }
+    },
+    "MetaJsonV140": {
+      "required": [
+        "license"
+      ],
+      "properties": {
+        "license": {
+          "$ref": "#/definitions/LicenseJsonV140"
+        }
+      }
+    },
+    "LicenseJsonV140": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "TESOBE"
+        },
+        "id": {
+          "type": "string",
+          "example": "5"
+        }
+      }
+    },
+    "AddressJsonV300": {
+      "required": [
+        "line_1",
+        "line_2",
+        "line_3",
+        "city",
+        "county",
+        "state",
+        "postcode",
+        "country_code"
+      ],
+      "properties": {
+        "city": {
+          "type": "string",
+          "example": "Berlin"
+        },
+        "line_2": {
+          "type": "string",
+          "example": "The Place"
+        },
+        "state": {
+          "type": "string",
+          "example": "Brandenburg"
+        },
+        "postcode": {
+          "type": "string",
+          "example": "13359"
+        },
+        "county": {
+          "type": "string",
+          "example": ""
+        },
+        "country_code": {
+          "type": "string",
+          "example": "DE"
+        },
+        "line_3": {
+          "type": "string",
+          "example": "The Hill"
+        },
+        "line_1": {
+          "type": "string",
+          "example": "No 1 the Road"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    }
+  }
+}

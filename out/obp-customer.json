@@ -1,0 +1,1926 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Customer",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-customer",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.4.0/banks/{BANK_ID}/crm-events": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get CRM Events",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "",
+        "operationId": "vv1_4_0-getCrmEvents",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CrmEventsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.4.0/banks/{BANK_ID}/customer/{CUSTOMER_ID}/messages": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Add Customer Message.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a message for the customer specified by CUSTOMER_ID\u003c/p\u003e",
+        "operationId": "vv1_4_0-addCustomerMessage",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddCustomerMessageJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v1.4.0/banks/{BANK_ID}/customer/messages": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customer Messages (current)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet messages for the logged in customer Messages sent to the currently authenticated user.\u003c/p\u003e\u003cp\u003eAuthentication via OAuth is required.\u003c/p\u003e",
+        "operationId": "vv1_4_0-getCustomerMessages",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CustomerMessagesJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/kyc_check/{KYC_CHECK_ID}": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Add KYC Check",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a KYC check for the customer specified by CUSTOMER_ID. KYC Checks store details of checks on a customer made by the KYC team, their comments and a satisfied status.\u003c/p\u003e",
+        "operationId": "vv2_0_0-addKycCheck",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostKycCheckJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "KYC_CHECK_ID",
+            "description": "The kyc check id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycCheckJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/kyc_documents/{KYC_DOCUMENT_ID}": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Add KYC Document.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a KYC document for the customer specified by CUSTOMER_ID. KYC Documents contain the document type (e.g. passport), place of issue, expiry etc. \u003c/p\u003e",
+        "operationId": "vv2_0_0-addKycDocument",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostKycDocumentJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "KYC_DOCUMENT_ID",
+            "description": "The kyc document id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycDocumentJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/kyc_media/{KYC_MEDIA_ID}": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Add KYC Media.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd some KYC media for the customer specified by CUSTOMER_ID. KYC Media resources relate to KYC Documents and KYC Checks and contain media urls for scans of passports, utility bills etc.\u003c/p\u003e",
+        "operationId": "vv2_0_0-addKycMedia",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostKycMediaJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "KYC_MEDIA_ID",
+            "description": "The kyc media id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycMediaJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/kyc_statuses": {
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Add KYC Status",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a kyc_status for the customer specified by CUSTOMER_ID. KYC Status is a timeline of the KYC status of the customer\u003c/p\u003e",
+        "operationId": "vv2_0_0-addKycStatus",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostKycStatusJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycStatusJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/customers/{CUSTOMER_ID}/social_media_handles": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customer Social Media Handles",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet social media handles for a customer specified by CUSTOMER_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getSocialMediaHandles",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SocialMediasJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Add Social Media Handle",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a social media handle for the customer specified by CUSTOMER_ID.\u003c/p\u003e",
+        "operationId": "vv2_0_0-addSocialMediaHandle",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SocialMediaJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessMessage"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/meetings": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Meetings",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eMeetings contain meta data about, and are used to facilitate, video conferences / chats etc.\u003c/p\u003e\u003cp\u003eThe actual conference/chats are handled by external services.\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eThis call is \u003cstrong\u003eexperimental\u003c/strong\u003e and will require further authorisation in the future.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getMeetings",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MeetingsJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Create Meeting (video conference/call)",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Meeting: Initiate a video conference/call with the bank.\u003c/p\u003e\u003cp\u003eThe Meetings resource contains meta data about video/other conference sessions, not the video/audio/chat itself.\u003c/p\u003e\u003cp\u003eThe actual conferencing is handled by external providers. Currently OBP supports tokbox video conferences (WIP).\u003c/p\u003e\u003cp\u003eThis is not a recomendation of tokbox per se.\u003c/p\u003e\u003cp\u003eprovider_id determines the provider of the meeting / video chat service. MUST be url friendly (no spaces).\u003c/p\u003e\u003cp\u003epurpose_id explains the purpose of the chat. onboarding | mortgage | complaint etc. MUST be url friendly (no spaces).\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eThis call is \u003cstrong\u003eexperimental\u003c/strong\u003e. Currently staff_user_id is not set. Further calls will be needed to correctly set this.\u003c/p\u003e",
+        "operationId": "vv2_0_0-createMeeting",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateMeetingJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MeetingJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/meetings/MEETING_ID": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Meeting",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Meeting specified by BANK_ID / MEETING_ID Meetings contain meta data about, and are used to facilitate, video conferences / chats etc.\u003c/p\u003e\u003cp\u003eThe actual conference/chats are handled by external services.\u003c/p\u003e\u003cp\u003eLogin is required.\u003c/p\u003e\u003cp\u003eThis call is \u003cstrong\u003eexperimental\u003c/strong\u003e and will require further authorisation in the future.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getMeeting",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MeetingJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/user_customer_links": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Create User Customer Link.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eLink a User to a Customer\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eCanCreateUserCustomerLink OR CanCreateUserCustomerLinkAtAnyBank entitlements are required.\u003c/p\u003e",
+        "operationId": "vv2_0_0-createUserCustomerLinks",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateUserCustomerLinkJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UserCustomerLinkJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/customers/{CUSTOMER_ID}/kyc_checks": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customer KYC Checks",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet KYC checks for the Customer specified by CUSTOMER_ID.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getKycChecks",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycChecksJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/customers/{CUSTOMER_ID}/kyc_documents": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customer KYC Documents",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet KYC (know your customer) documents for a customer specified by CUSTOMER_ID Get a list of documents that affirm the identity of the customer Passport, driving licence etc. Authentication is Optional\u003c/p\u003e",
+        "operationId": "vv2_0_0-getKycDocuments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycDocumentsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/customers/{CUSTOMER_ID}/kyc_media": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get KYC Media for a customer",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet KYC media (scans, pictures, videos) that affirms the identity of the customer.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getKycMedia",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycMediasJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/customers/{CUSTOMER_ID}/kyc_statuses": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customer KYC statuses",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the KYC statuses for a customer specified by CUSTOMER_ID over time.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getKycStatuses",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CUSTOMER_ID",
+            "description": "The customer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/KycStatusesJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/customers": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customers for current User at Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eRetuns a list of Customers at the Bank that are linked to the currently authenticated User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-getCustomersForCurrentUserAtBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CustomerJsonV210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Create Customer.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAdd a customer linked to the user specified by user_id The Customer resource stores the customer number, legal name, email, phone number, their date of birth, relationship status, education attained, a url for a profile image, KYC status etc. Dates need to be in the format 2013-01-21T23:08:00Z\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eCanCreateCustomer and CanCreateUserCustomerLink OR CanCreateCustomerAtAnyBank and CanCreateUserCustomerLinkAtAnyBank\u003c/p\u003e",
+        "operationId": "vv2_1_0-createCustomer",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostCustomerJsonV210"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CustomerJsonV210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/users/current/customers": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "summary": "Get Customers for Current User",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGets all Customers that are linked to a User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getCustomersForUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CustomerJsonV210"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CrmEventsJson": {
+      "required": [
+        "crm_events"
+      ],
+      "properties": {
+        "crm_events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrmEventJson"
+          }
+        }
+      }
+    },
+    "CrmEventJson": {
+      "required": [
+        "id",
+        "bank_id",
+        "customer_name",
+        "customer_number",
+        "category",
+        "detail",
+        "channel",
+        "scheduled_date",
+        "actual_date",
+        "result"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "example": "String"
+        },
+        "customer_name": {
+          "type": "string",
+          "example": "String"
+        },
+        "result": {
+          "type": "string",
+          "example": "String"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "scheduled_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "category": {
+          "type": "string",
+          "example": "String"
+        },
+        "detail": {
+          "type": "string",
+          "example": "String"
+        },
+        "actual_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "AddCustomerMessageJson": {
+      "required": [
+        "message",
+        "from_department",
+        "from_person"
+      ],
+      "properties": {
+        "from_person": {
+          "type": "string",
+          "example": "String"
+        },
+        "from_department": {
+          "type": "string",
+          "example": "String"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "SuccessMessage": {
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "example": "Success"
+        }
+      }
+    },
+    "CustomerMessagesJson": {
+      "required": [
+        "messages"
+      ],
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomerMessageJson"
+          }
+        }
+      }
+    },
+    "CustomerMessageJson": {
+      "required": [
+        "id",
+        "date",
+        "message",
+        "from_department",
+        "from_person"
+      ],
+      "properties": {
+        "from_person": {
+          "type": "string",
+          "example": "String"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "from_department": {
+          "type": "string",
+          "example": "String"
+        },
+        "message": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "PostKycCheckJSON": {
+      "required": [
+        "customer_number",
+        "date",
+        "how",
+        "staff_user_id",
+        "staff_name",
+        "satisfied",
+        "comments"
+      ],
+      "properties": {
+        "customer_number": {
+          "type": "string",
+          "example": "1239879"
+        },
+        "how": {
+          "type": "string",
+          "example": "online_meeting"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "satisfied": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "staff_user_id": {
+          "type": "string",
+          "example": "67876"
+        },
+        "staff_name": {
+          "type": "string",
+          "example": "Simon"
+        },
+        "comments": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "KycCheckJSON": {
+      "required": [
+        "bank_id",
+        "customer_id",
+        "id",
+        "customer_number",
+        "date",
+        "how",
+        "staff_user_id",
+        "staff_name",
+        "satisfied",
+        "comments"
+      ],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "how": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "satisfied": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "staff_user_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "staff_name": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "comments": {
+          "type": "string",
+          "example": "PlaceholderString"
+        }
+      }
+    },
+    "PostKycDocumentJSON": {
+      "required": [
+        "customer_number",
+        "type",
+        "number",
+        "issue_date",
+        "issue_place",
+        "expiry_date"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "12345"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "1234"
+        },
+        "issue_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "type": {
+          "type": "string",
+          "example": "passport"
+        },
+        "issue_place": {
+          "type": "string",
+          "example": "Berlin"
+        },
+        "expiry_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "KycDocumentJSON": {
+      "required": [
+        "bank_id",
+        "customer_id",
+        "id",
+        "customer_number",
+        "type",
+        "number",
+        "issue_date",
+        "issue_place",
+        "expiry_date"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "customer_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "issue_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "type": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "issue_place": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "expiry_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "PostKycMediaJSON": {
+      "required": [
+        "customer_number",
+        "type",
+        "url",
+        "date",
+        "relates_to_kyc_document_id",
+        "relates_to_kyc_check_id"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "example": "http://www.example.com/id-docs/123/image.png"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "1239879"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "relates_to_kyc_document_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "relates_to_kyc_check_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "type": {
+          "type": "string",
+          "example": "image"
+        }
+      }
+    },
+    "KycMediaJSON": {
+      "required": [
+        "bank_id",
+        "customer_id",
+        "id",
+        "customer_number",
+        "type",
+        "url",
+        "date",
+        "relates_to_kyc_document_id",
+        "relates_to_kyc_check_id"
+      ],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "url": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "relates_to_kyc_document_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "relates_to_kyc_check_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "type": {
+          "type": "string",
+          "example": "PlaceholderString"
+        }
+      }
+    },
+    "PostKycStatusJSON": {
+      "required": [
+        "customer_number",
+        "ok",
+        "date"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "ok": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "KycStatusJSON": {
+      "required": [
+        "customer_id",
+        "customer_number",
+        "ok",
+        "date"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "ok": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "customer_id": {
+          "type": "string",
+          "example": "PlaceholderString"
+        }
+      }
+    },
+    "SocialMediasJSON": {
+      "required": [
+        "checks"
+      ],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SocialMediaJSON"
+          }
+        }
+      }
+    },
+    "SocialMediaJSON": {
+      "required": [
+        "customer_number",
+        "type",
+        "handle",
+        "date_added",
+        "date_activated"
+      ],
+      "properties": {
+        "date_activated": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "date_added": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "type": {
+          "type": "string",
+          "example": "PlaceholderString"
+        },
+        "handle": {
+          "type": "string",
+          "example": "PlaceholderString"
+        }
+      }
+    },
+    "MeetingsJson": {
+      "required": [
+        "meetings"
+      ],
+      "properties": {
+        "meetings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MeetingJson"
+          }
+        }
+      }
+    },
+    "MeetingJson": {
+      "required": [
+        "meeting_id",
+        "provider_id",
+        "purpose_id",
+        "bank_id",
+        "present",
+        "keys",
+        "when"
+      ],
+      "properties": {
+        "present": {
+          "$ref": "#/definitions/MeetingPresentJson"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "purpose_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "when": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "meeting_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "keys": {
+          "$ref": "#/definitions/MeetingKeysJson"
+        }
+      }
+    },
+    "MeetingPresentJson": {
+      "required": [
+        "staff_user_id",
+        "customer_user_id"
+      ],
+      "properties": {
+        "customer_user_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "staff_user_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "MeetingKeysJson": {
+      "required": [
+        "session_id",
+        "staff_token",
+        "customer_token"
+      ],
+      "properties": {
+        "customer_token": {
+          "type": "string",
+          "example": "String"
+        },
+        "staff_token": {
+          "type": "string",
+          "example": "String"
+        },
+        "session_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "CreateMeetingJson": {
+      "required": [
+        "provider_id",
+        "purpose_id"
+      ],
+      "properties": {
+        "purpose_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "CreateUserCustomerLinkJson": {
+      "required": [
+        "user_id",
+        "customer_id"
+      ],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "UserCustomerLinkJson": {
+      "required": [
+        "user_customer_link_id",
+        "customer_id",
+        "user_id",
+        "date_inserted",
+        "is_active"
+      ],
+      "properties": {
+        "is_active": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "customer_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "date_inserted": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "user_customer_link_id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "KycChecksJSON": {
+      "required": [
+        "checks"
+      ],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KycCheckJSON"
+          }
+        }
+      }
+    },
+    "KycDocumentsJSON": {
+      "required": [
+        "documents"
+      ],
+      "properties": {
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KycDocumentJSON"
+          }
+        }
+      }
+    },
+    "KycMediasJSON": {
+      "required": [
+        "medias"
+      ],
+      "properties": {
+        "medias": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KycMediaJSON"
+          }
+        }
+      }
+    },
+    "KycStatusesJSON": {
+      "required": [
+        "statuses"
+      ],
+      "properties": {
+        "statuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KycStatusJSON"
+          }
+        }
+      }
+    },
+    "CustomerJsonV210": {
+      "required": [
+        "bank_id",
+        "customer_id",
+        "customer_number",
+        "legal_name",
+        "mobile_phone_number",
+        "email",
+        "face_image",
+        "date_of_birth",
+        "relationship_status",
+        "dependants",
+        "dob_of_dependants",
+        "highest_education_attained",
+        "employment_status",
+        "kyc_status",
+        "last_ok_date"
+      ],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "example": "123"
+        },
+        "email": {
+          "type": "string",
+          "example": "contact@tesobe.com"
+        },
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "123"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "123"
+        },
+        "highest_education_attained": {
+          "type": "string",
+          "example": "123"
+        },
+        "dob_of_dependants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bankid1234"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "credit_rating": {
+          "$ref": "#/definitions/CustomerCreditRatingJSON"
+        },
+        "last_ok_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "employment_status": {
+          "type": "string",
+          "example": "123"
+        },
+        "legal_name": {
+          "type": "string",
+          "example": "legal_name"
+        },
+        "credit_limit": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "face_image": {
+          "$ref": "#/definitions/CustomerFaceImageJson"
+        },
+        "dependants": {
+          "type": "integer",
+          "format": "int32",
+          "example": "123"
+        },
+        "relationship_status": {
+          "type": "string",
+          "example": "123"
+        },
+        "kyc_status": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "CustomerCreditRatingJSON": {
+      "required": [
+        "rating",
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "rating": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "CustomerFaceImageJson": {
+      "required": [
+        "url",
+        "date"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "url": {
+          "type": "string",
+          "example": "www.openbankproject"
+        }
+      }
+    },
+    "PostCustomerJsonV210": {
+      "required": [
+        "user_id",
+        "customer_number",
+        "legal_name",
+        "mobile_phone_number",
+        "email",
+        "face_image",
+        "date_of_birth",
+        "relationship_status",
+        "dependants",
+        "dob_of_dependants",
+        "credit_rating",
+        "credit_limit",
+        "highest_education_attained",
+        "employment_status",
+        "kyc_status",
+        "last_ok_date"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "person@example.com"
+        },
+        "mobile_phone_number": {
+          "type": "string",
+          "example": "+44 07972 444 876"
+        },
+        "customer_number": {
+          "type": "string",
+          "example": "new customer number 687687678"
+        },
+        "highest_education_attained": {
+          "type": "string",
+          "example": "Bachelor’s Degree"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "user_id to attach this customer to e.g. 123213"
+        },
+        "dob_of_dependants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "date_of_birth": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "credit_rating": {
+          "$ref": "#/definitions/CustomerCreditRatingJSON"
+        },
+        "last_ok_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "employment_status": {
+          "type": "string",
+          "example": "Employed"
+        },
+        "legal_name": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "credit_limit": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "face_image": {
+          "$ref": "#/definitions/CustomerFaceImageJson"
+        },
+        "dependants": {
+          "type": "integer",
+          "format": "int32",
+          "example": "5"
+        },
+        "relationship_status": {
+          "type": "string",
+          "example": "Single"
+        },
+        "kyc_status": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    }
+  }
+}

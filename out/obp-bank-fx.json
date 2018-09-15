@@ -1,0 +1,199 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Bank-FX",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-bank-fx",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v2.2.0/banks/{BANK_ID}/fx": {
+      "put": {
+        "tags": [
+          "Bank-FX"
+        ],
+        "summary": "Create Fx",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate or Update Fx for the Bank.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e\u003cp\u003eOBP-20006: User is missing one or more roles: CanCreateFxRate OR CanCreateFxRateAtAnyBank\u003c/p\u003e",
+        "operationId": "vv2_2_0-createFx",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FXRateJsonV220"
+            }
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FXRateJsonV220"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.2.0/banks/{BANK_ID}/fx/{FROM_CURRENCY_CODE}/{TO_CURRENCY_CODE}": {
+      "get": {
+        "tags": [
+          "Bank-FX"
+        ],
+        "summary": "Get Current FxRate",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet the latest FXRate specified by BANK_ID, FROM_CURRENCY_CODE and TO_CURRENCY_CODE \u003c/p\u003e",
+        "operationId": "vv2_2_0-getCurrentFxRate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "TO_CURRENCY_CODE",
+            "description": "The to currency code",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "FROM_CURRENCY_CODE",
+            "description": "The from currency code",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/FXRateJsonV220"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorInvalidISOCurrencyCode"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "FXRateJsonV220": {
+      "required": [
+        "bank_id",
+        "from_currency_code",
+        "to_currency_code",
+        "conversion_value",
+        "inverse_conversion_value",
+        "effective_date"
+      ],
+      "properties": {
+        "inverse_conversion_value": {
+          "type": "number",
+          "format": "double",
+          "example": "1.0"
+        },
+        "to_currency_code": {
+          "type": "string",
+          "example": "USD"
+        },
+        "effective_date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "conversion_value": {
+          "type": "number",
+          "format": "double",
+          "example": "1.0"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "bankid123"
+        },
+        "from_currency_code": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "ErrorInvalidISOCurrencyCode": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-10003: Invalid Currency Value. It should be three letters ISO Currency Code. "
+        }
+      }
+    }
+  }
+}

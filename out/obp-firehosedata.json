@@ -1,0 +1,685 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-FirehoseData",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-firehosedata",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v3.0.0/banks/{BANK_ID}/firehose/accounts/{ACCOUNT_ID}/views/{VIEW_ID}/transactions": {
+      "get": {
+        "tags": [
+          "FirehoseData"
+        ],
+        "summary": "Get Firehose Transactions for Account",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Transactions for an Account that has a firehose View.\u003c/p\u003e\u003cp\u003eAllows bulk access to an account\u0027s transactions. User must have the CanUseFirehoseAtAnyBank Role\u003c/p\u003e\u003cp\u003eTo find ACCOUNT_IDs, use the getFirehoseAccountsAtOneBank call.\u003c/p\u003e\u003cp\u003eFor VIEW_ID try \u0027firehose\u0027\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getFirehoseTransactionsForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/banks/{BANK_ID}/firehose/accounts/views/{VIEW_ID}": {
+      "get": {
+        "tags": [
+          "FirehoseData"
+        ],
+        "summary": "Get Firehose Accounts at Bank",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Accounts which have a firehose view assigned to them.\u003c/p\u003e\u003cp\u003eThis endpoint allows bulk access to accounts.\u003c/p\u003e\u003cp\u003eRequires the CanUseFirehoseAtAnyBank Role\u003c/p\u003e\u003cp\u003eTo be shown on the list, each Account must have a firehose View linked to it.\u003c/p\u003e\u003cp\u003eFor VIEW_ID try \u0027firehose\u0027\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getFirehoseAccountsAtOneBank",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ModeratedCoreAccountsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.1.0/banks/{BANK_ID}/firehose/customers": {
+      "get": {
+        "tags": [
+          "FirehoseData"
+        ],
+        "summary": "Get Firehose Customers",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Customers that has a firehose View.\u003c/p\u003e\u003cp\u003eAllows bulk access to customers. User must have the CanUseFirehoseAtAnyBank Role\u003c/p\u003e\u003cp\u003eFor VIEW_ID try \u0027firehose\u0027\u003c/p\u003e\u003cp\u003ePossible custom URL parameters for pagination:\u003c/p\u003e\u003cul\u003e  \u003cli\u003esort_direction\u003dASC/DESC\u003c/li\u003e  \u003cli\u003elimit\u003dNUMBER \u003d\u003d\u0026gt; default value: 50\u003c/li\u003e  \u003cli\u003eoffset\u003dNUMBER \u003d\u003d\u0026gt; default value: 0\u003c/li\u003e  \u003cli\u003efrom_date\u003dDATE \u003d\u0026gt; default value: date of the oldest customer created (format below)\u003c/li\u003e  \u003cli\u003eto_date\u003dDATE \u003d\u0026gt; default value: date of the newest customer created (format below)\u003c/li\u003e\u003c/ul\u003e\u003cp\u003e\u003cstrong\u003eDate format parameter\u003c/strong\u003e: yyyy-MM-dd\u0027T\u0027HH:mm:ss.SSS\u0027Z\u0027(2017-09-19T02:31:05.000Z) \u003d\u003d\u0026gt; time zone is UTC.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_1_0-getFirehoseCustomers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/TransactionsJsonV300"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TransactionsJsonV300": {
+      "required": [
+        "transactions"
+      ],
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionJsonV300"
+          }
+        }
+      }
+    },
+    "TransactionJsonV300": {
+      "required": [
+        "id",
+        "this_account",
+        "other_account",
+        "details",
+        "metadata"
+      ],
+      "properties": {
+        "this_account": {
+          "$ref": "#/definitions/ThisAccountJsonV300"
+        },
+        "id": {
+          "type": "string",
+          "example": "String"
+        },
+        "details": {
+          "$ref": "#/definitions/TransactionDetailsJSON"
+        },
+        "metadata": {
+          "$ref": "#/definitions/TransactionMetadataJSON"
+        },
+        "other_account": {
+          "$ref": "#/definitions/OtherAccountJsonV300"
+        }
+      }
+    },
+    "ThisAccountJsonV300": {
+      "required": [
+        "id",
+        "bank_routing",
+        "account_routings",
+        "holders"
+      ],
+      "properties": {
+        "holders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountHolderJSON"
+          }
+        },
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        },
+        "id": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    },
+    "AccountHolderJSON": {
+      "required": [
+        "name",
+        "is_alias"
+      ],
+      "properties": {
+        "is_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "name": {
+          "type": "string",
+          "example": "OBP"
+        }
+      }
+    },
+    "AccountRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "4930396"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "AccountNumber"
+        }
+      }
+    },
+    "BankRoutingJsonV121": {
+      "required": [
+        "scheme",
+        "address"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "Bank_ID"
+        }
+      }
+    },
+    "TransactionDetailsJSON": {
+      "required": [
+        "type",
+        "description",
+        "posted",
+        "completed",
+        "new_balance",
+        "value"
+      ],
+      "properties": {
+        "new_balance": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "description": {
+          "type": "string",
+          "example": "this is for family"
+        },
+        "completed": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "type": {
+          "type": "string",
+          "example": "AC"
+        },
+        "value": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "posted": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "AmountOfMoneyJsonV121": {
+      "required": [
+        "currency",
+        "amount"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "example": "10"
+        },
+        "currency": {
+          "type": "string",
+          "example": "EUR"
+        }
+      }
+    },
+    "TransactionMetadataJSON": {
+      "required": [
+        "narrative",
+        "comments",
+        "tags",
+        "images",
+        "where"
+      ],
+      "properties": {
+        "narrative": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionTagJSON"
+          }
+        },
+        "where": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionImageJSON"
+          }
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionCommentJSON"
+          }
+        }
+      }
+    },
+    "TransactionTagJSON": {
+      "required": [
+        "id",
+        "value",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "value": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "UserJSONV121": {
+      "required": [
+        "id",
+        "provider",
+        "display_name"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "LocationJSONV121": {
+      "required": [
+        "latitude",
+        "longitude",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.231"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "example": "1.231"
+        }
+      }
+    },
+    "TransactionImageJSON": {
+      "required": [
+        "id",
+        "label",
+        "URL",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "label": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        }
+      }
+    },
+    "TransactionCommentJSON": {
+      "required": [
+        "id",
+        "value",
+        "date",
+        "user"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        },
+        "value": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "OtherAccountJsonV300": {
+      "required": [
+        "id",
+        "holder",
+        "bank_routing",
+        "account_routings",
+        "metadata"
+      ],
+      "properties": {
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "holder": {
+          "$ref": "#/definitions/AccountHolderJSON"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "metadata": {
+          "$ref": "#/definitions/OtherAccountMetadataJSON"
+        },
+        "bank_routing": {
+          "$ref": "#/definitions/BankRoutingJsonV121"
+        }
+      }
+    },
+    "OtherAccountMetadataJSON": {
+      "required": [
+        "public_alias",
+        "private_alias",
+        "more_info",
+        "URL",
+        "image_URL",
+        "open_corporates_URL",
+        "corporate_location",
+        "physical_location"
+      ],
+      "properties": {
+        "public_alias": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "image_URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "physical_location": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "private_alias": {
+          "type": "string",
+          "example": "NONE"
+        },
+        "URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "more_info": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        },
+        "corporate_location": {
+          "$ref": "#/definitions/LocationJSONV121"
+        },
+        "open_corporates_URL": {
+          "type": "string",
+          "example": "www.openbankproject.com"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "ModeratedCoreAccountsJsonV300": {
+      "required": [
+        "accounts"
+      ],
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModeratedCoreAccountJsonV300"
+          }
+        }
+      }
+    },
+    "ModeratedCoreAccountJsonV300": {
+      "required": [
+        "id",
+        "bank_id",
+        "label",
+        "number",
+        "owners",
+        "type",
+        "balance",
+        "account_routings",
+        "account_rules"
+      ],
+      "properties": {
+        "number": {
+          "type": "string",
+          "example": "String"
+        },
+        "account_routings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRoutingJsonV121"
+          }
+        },
+        "label": {
+          "type": "string",
+          "example": "String"
+        },
+        "owners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserJSONV121"
+          }
+        },
+        "balance": {
+          "$ref": "#/definitions/AmountOfMoneyJsonV121"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "String"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "type": {
+          "type": "string",
+          "example": "String"
+        },
+        "account_rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountRuleJsonV300"
+          }
+        }
+      }
+    },
+    "AccountRuleJsonV300": {
+      "required": [
+        "scheme",
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "example": "10"
+        },
+        "scheme": {
+          "type": "string",
+          "example": "OVERDRAFT"
+        }
+      }
+    }
+  }
+}

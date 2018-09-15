@@ -1,0 +1,1270 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "OpenBankProject-Entitlement",
+    "description": "An Open Source API for Banks. (c) TESOBE Ltd. 2011 - 2018. Licensed under the AGPL and commercial licences.",
+    "contact": {
+      "name": "TESOBE Ltd. / Open Bank Project",
+      "url": "https://openbankproject.com",
+      "email": "contact@tesobe.com"
+    },
+    "version": "v3_1_0"
+  },
+  "host": "api.openbankproject.com",
+  "basePath": "/obp-entitlement",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "directLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Direct-Login",
+      "in": "header",
+      "name": "Authorization"
+    },
+    "gatewayLogin": {
+      "type": "apiKey",
+      "description": "https://github.com/OpenBankProject/OBP-API/wiki/Gateway-Login",
+      "in": "header",
+      "name": "Authorization"
+    }
+  },
+  "security": [
+    {
+      "directLogin": [],
+      "gatewayLogin": []
+    }
+  ],
+  "paths": {
+    "/obp/v1.2.1/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions/{PROVIDER_ID}/{USER_ID}/views/{VIEW_ID}": {
+      "delete": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Revoke access to one View.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eRevokes the user identified by PROVIDER_ID at their provider PROVIDER access to the view VIEW_ID at BANK_ID for account ACCOUNT_ID.\u003c/p\u003e\u003cp\u003eRevoking a user access to a public view will return an error message.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv1_2_1-removePermissionForUserForBankAccountForOneView",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "PROVIDER_ID",
+            "description": "The provider id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "VIEW_ID",
+            "description": "The view id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/banks/{BANK_ID}/accounts/{ACCOUNT_ID}/permissions": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get access.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eReturns the list of the permissions at BANK_ID for account ACCOUNT_ID, with each time a pair composed of the user and the views that he has access to.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory and the user needs to have access to the owner view.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getPermissionsForBankAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ACCOUNT_ID",
+            "description": "The account id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PermissionsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/entitlements": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get all Entitlements",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eLogin is required.\u003c/p\u003e",
+        "operationId": "vv2_0_0-getAllEntitlements",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/users/{USER_ID}/entitlement/{ENTITLEMENT_ID}": {
+      "delete": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Delete Entitlement",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete Entitlement specified by ENTITLEMENT_ID for an user specified by USER_ID\u003c/p\u003e\u003cp\u003eAuthentication is required and the user needs to be a Super Admin. Super Admins are listed in the Props file.\u003c/p\u003e",
+        "operationId": "vv2_0_0-deleteEntitlement",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ENTITLEMENT_ID",
+            "description": "The entitblement id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.0.0/users/{USER_ID}/entitlements": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get Entitlements for User",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_0_0-getEntitlements",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Add Entitlement for a User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Entitlement. Grant Role to User.\u003c/p\u003e\u003cp\u003eEntitlements are used to grant System or Bank level roles to Users. (For Account level privileges, see Views)\u003c/p\u003e\u003cp\u003eFor a System level Role (.e.g CanGetAnyUser), set bank_id to an empty string i.e. \"bank_id\":\"\"\u003c/p\u003e\u003cp\u003eFor a Bank level Role (e.g. CanCreateAccount), set bank_id to a valid value e.g. \"bank_id\":\"my-bank-id\"\u003c/p\u003e\u003cp\u003eAuthentication is required and the user needs to be a Super Admin. Super Admins are listed in the Props file.\u003c/p\u003e",
+        "operationId": "vv2_0_0-addEntitlement",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateEntitlementJSON"
+            }
+          },
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v2.1.0/banks/{BANK_ID}/users/{USER_ID}/entitlements": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get Entitlements for User at Bank.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlements specified by BANK_ID and USER_ID\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv2_1_0-getEntitlementsByBankAndUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "BANK_ID",
+            "description": "The bank id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/consumers/{CONSUMER_ID}/scope/SCOPE_ID": {
+      "delete": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Delete Consumer Scope",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete Consumer Scope specified by SCOPE_ID for an consumer specified by CONSUMER_ID\u003c/p\u003e\u003cp\u003eAuthentication is required and the user needs to be a Super Admin. Super Admins are listed in the Props file.\u003c/p\u003e",
+        "operationId": "vv3_0_0-deleteScope",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/consumers/{CONSUMER_ID}/scopes": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get Scopes for Consumer",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet all the scopes for an consumer specified by CONSUMER_ID\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getScopes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ScopeJsons"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Add Scope for a Consumer.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Scope. Grant Role to Consumer.\u003c/p\u003e\u003cp\u003eScopes are used to grant System or Bank level roles to the Consumer (App). (For Account level privileges, see Views)\u003c/p\u003e\u003cp\u003eFor a System level Role (.e.g CanGetAnyUser), set bank_id to an empty string i.e. \"bank_id\":\"\"\u003c/p\u003e\u003cp\u003eFor a Bank level Role (e.g. CanCreateAccount), set bank_id to a valid value e.g. \"bank_id\":\"my-bank-id\"\u003c/p\u003e",
+        "operationId": "vv3_0_0-addScope",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateScopeJson"
+            }
+          },
+          {
+            "in": "path",
+            "name": "CONSUMER_ID",
+            "description": "new consumer id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ScopeJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/entitlement-requests": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get all Entitlement Requests",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet all Entitlement Requests\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getAllEntitlementRequests",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Add Entitlement Request for a Logged User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eCreate Entitlement Request.\u003c/p\u003e\u003cp\u003eAny logged in User can use this endpoint to request an Entitlement\u003c/p\u003e\u003cp\u003eEntitlements are used to grant System or Bank level roles to Users. (For Account level privileges, see Views)\u003c/p\u003e\u003cp\u003eFor a System level Role (.e.g CanGetAnyUser), set bank_id to an empty string i.e. \"bank_id\":\"\"\u003c/p\u003e\u003cp\u003eFor a Bank level Role (e.g. CanCreateAccount), set bank_id to a valid value e.g. \"bank_id\":\"my-bank-id\"\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-addEntitlementRequest",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "BANK_BODY",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateEntitlementJSON"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/entitlement-requests/ENTITLEMENT_REQUEST_ID": {
+      "delete": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Delete Entitlement Request",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eDelete the Entitlement Request specified by ENTITLEMENT_REQUEST_ID for a user specified by USER_ID\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-deleteEntitlementRequest",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EmptyClassJson"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/my/entitlement-requests": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get Entitlement Requests for the current User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlement Requests for the current User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getEntitlementRequestsForCurrentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/my/entitlements": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get Entitlements for the current User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlements for the current User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getEntitlementsForCurrentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementJSONs"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    },
+    "/obp/v3.0.0/users/{USER_ID}/entitlement-requests": {
+      "get": {
+        "tags": [
+          "Entitlement"
+        ],
+        "summary": "Get Entitlement Requests for a User.",
+        "security": [
+          {
+            "directLogin": [],
+            "gatewayLogin": []
+          }
+        ],
+        "description": "\u003cp\u003eGet Entitlement Requests for a User.\u003c/p\u003e\u003cp\u003eAuthentication is Mandatory\u003c/p\u003e",
+        "operationId": "vv3_0_0-getEntitlementRequests",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "USER_ID",
+            "description": "The user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/EntitlementRequestsJSON"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorUserNotLoggedIn"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EmptyClassJson": {
+      "required": [
+        "jsonString"
+      ],
+      "properties": {
+        "jsonString": {
+          "type": "string",
+          "example": "{}"
+        }
+      }
+    },
+    "ErrorUserNotLoggedIn": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "OBP-20001: User not logged in. Authentication is required!"
+        }
+      }
+    },
+    "PermissionsJSON": {
+      "required": [
+        "permissions"
+      ],
+      "properties": {
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PermissionJSON"
+          }
+        }
+      }
+    },
+    "PermissionJSON": {
+      "required": [
+        "user",
+        "views"
+      ],
+      "properties": {
+        "views": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ViewJSONV121"
+          }
+        },
+        "user": {
+          "$ref": "#/definitions/UserJSONV121"
+        }
+      }
+    },
+    "ViewJSONV121": {
+      "required": [
+        "id",
+        "short_name",
+        "description",
+        "is_public",
+        "alias",
+        "hide_metadata_if_alias_used",
+        "can_add_comment",
+        "can_add_corporate_location",
+        "can_add_image",
+        "can_add_image_url",
+        "can_add_more_info",
+        "can_add_open_corporates_url",
+        "can_add_physical_location",
+        "can_add_private_alias",
+        "can_add_public_alias",
+        "can_add_tag",
+        "can_add_url",
+        "can_add_where_tag",
+        "can_delete_comment",
+        "can_delete_corporate_location",
+        "can_delete_image",
+        "can_delete_physical_location",
+        "can_delete_tag",
+        "can_delete_where_tag",
+        "can_edit_owner_comment",
+        "can_see_bank_account_balance",
+        "can_see_bank_account_bank_name",
+        "can_see_bank_account_currency",
+        "can_see_bank_account_iban",
+        "can_see_bank_account_label",
+        "can_see_bank_account_national_identifier",
+        "can_see_bank_account_number",
+        "can_see_bank_account_owners",
+        "can_see_bank_account_swift_bic",
+        "can_see_bank_account_type",
+        "can_see_comments",
+        "can_see_corporate_location",
+        "can_see_image_url",
+        "can_see_images",
+        "can_see_more_info",
+        "can_see_open_corporates_url",
+        "can_see_other_account_bank_name",
+        "can_see_other_account_iban",
+        "can_see_other_account_kind",
+        "can_see_other_account_metadata",
+        "can_see_other_account_national_identifier",
+        "can_see_other_account_number",
+        "can_see_other_account_swift_bic",
+        "can_see_owner_comment",
+        "can_see_physical_location",
+        "can_see_private_alias",
+        "can_see_public_alias",
+        "can_see_tags",
+        "can_see_transaction_amount",
+        "can_see_transaction_balance",
+        "can_see_transaction_currency",
+        "can_see_transaction_description",
+        "can_see_transaction_finish_date",
+        "can_see_transaction_metadata",
+        "can_see_transaction_other_bank_account",
+        "can_see_transaction_start_date",
+        "can_see_transaction_this_bank_account",
+        "can_see_transaction_type",
+        "can_see_url",
+        "can_see_where_tag"
+      ],
+      "properties": {
+        "can_see_transaction_start_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_this_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_owners": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_edit_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_owner_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "description": {
+          "type": "string",
+          "example": "description"
+        },
+        "can_see_transaction_other_bank_account": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_comments": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_bank_name": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_number": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_kind": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_label": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "is_public": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_finish_date": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_images": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_currency": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "hide_metadata_if_alias_used": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "alias": {
+          "type": "string",
+          "example": "None"
+        },
+        "can_add_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_image_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "id": {
+          "type": "string",
+          "example": "123"
+        },
+        "can_see_bank_account_national_identifier": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_tags": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_open_corporates_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "short_name": {
+          "type": "string",
+          "example": "short_name"
+        },
+        "can_delete_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_more_info": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_comment": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_where_tag": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_private_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_public_alias": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_swift_bic": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_iban": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_physical_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_add_corporate_location": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_delete_image": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_url": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_balance": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_amount": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_other_account_metadata": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_bank_account_type": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "can_see_transaction_description": {
+          "type": "boolean",
+          "example": "true"
+        }
+      }
+    },
+    "UserJSONV121": {
+      "required": [
+        "id",
+        "provider",
+        "display_name"
+      ],
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        }
+      }
+    },
+    "EntitlementJSONs": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitlementJSON"
+          }
+        }
+      }
+    },
+    "EntitlementJSON": {
+      "required": [
+        "entitlement_id",
+        "role_name",
+        "bank_id"
+      ],
+      "properties": {
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanQueryOtherUser"
+        },
+        "entitlement_id": {
+          "type": "string",
+          "example": "6fb17583-1e49-4435-bb74-a14fe0996723"
+        }
+      }
+    },
+    "CreateEntitlementJSON": {
+      "required": [
+        "bank_id",
+        "role_name"
+      ],
+      "properties": {
+        "role_name": {
+          "type": "string",
+          "example": "String"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        }
+      }
+    },
+    "ScopeJsons": {
+      "required": [
+        "list"
+      ],
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScopeJson"
+          }
+        }
+      }
+    },
+    "ScopeJson": {
+      "required": [
+        "scope_id",
+        "role_name",
+        "bank_id"
+      ],
+      "properties": {
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanGetEntitlementsForAnyUserAtOneBank"
+        },
+        "scope_id": {
+          "type": "string",
+          "example": "88625da4-a671-435e-9d24-e5b6e5cc404f"
+        }
+      }
+    },
+    "CreateScopeJson": {
+      "required": [
+        "bank_id",
+        "role_name"
+      ],
+      "properties": {
+        "role_name": {
+          "type": "string",
+          "example": "CanGetEntitlementsForAnyUserAtOneBank"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        }
+      }
+    },
+    "EntitlementRequestsJSON": {
+      "required": [
+        "entitlement_requests"
+      ],
+      "properties": {
+        "entitlement_requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitlementRequestJSON"
+          }
+        }
+      }
+    },
+    "EntitlementRequestJSON": {
+      "required": [
+        "entitlement_request_id",
+        "user",
+        "role_name",
+        "bank_id",
+        "created"
+      ],
+      "properties": {
+        "entitlement_request_id": {
+          "type": "string",
+          "example": "6fb17583-1e49-4435-bb74-a14fe0996723"
+        },
+        "role_name": {
+          "type": "string",
+          "example": "CanQueryOtherUser"
+        },
+        "bank_id": {
+          "type": "string",
+          "example": "gh.29.uk"
+        },
+        "user": {
+          "$ref": "#/definitions/UserJsonV200"
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "example": "Tue Sep 19 00:00:00 UTC 2017"
+        }
+      }
+    },
+    "UserJsonV200": {
+      "required": [
+        "user_id",
+        "email",
+        "provider_id",
+        "provider",
+        "username",
+        "entitlements"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "email": {
+          "type": "string",
+          "example": "robert.x.0.gh@example.com"
+        },
+        "username": {
+          "type": "string",
+          "example": "robert.x.0.gh"
+        },
+        "provider_id": {
+          "type": "string",
+          "example": "OBP"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "5995d6a2-01b3-423c-a173-5481df49bdaf"
+        },
+        "entitlements": {
+          "$ref": "#/definitions/EntitlementJSONs"
+        }
+      }
+    }
+  }
+}
