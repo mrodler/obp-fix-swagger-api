@@ -58,7 +58,7 @@ public class FixSwaggerFile {
 	}
 
 	private void createApiForName(String apiName) {
-		System.out.println("building api obp-" + apiName.toLowerCase());
+		System.out.println("API:" + apiName.toLowerCase());
 		JsonObject api = new JsonObject();
 		obpFull.entrySet().forEach(e -> {
 			if ("paths".equals(e.getKey())) {
@@ -102,7 +102,13 @@ public class FixSwaggerFile {
 				JsonObject method = methodEntry.getValue().getAsJsonObject();
 
 				if (isMethodTaggedForAPI(method, apiName)) {
-					System.out.println("  " + methodEntry.getKey().toUpperCase() + " " + pathEntry.getKey());
+					String summary = methodEntry.getValue()
+												.getAsJsonObject()
+												.get("summary")
+												.getAsJsonPrimitive()
+												.getAsString();
+					System.out.println("  * " + summary);
+					System.out.println("    " + methodEntry.getKey().toUpperCase() + " " + pathEntry.getKey());
 					JsonObject newMethod = new JsonObject();
 					method.entrySet().forEach(e -> newMethod.add(e.getKey(), e.getValue()));
 					newMethod.add("tags", apiTags);
